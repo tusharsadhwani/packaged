@@ -11,13 +11,13 @@ pip install packaged
 ## Usage
 
 ```bash
-packaged <source_directory> <build_command> <startup_command>
+packaged <source_directory> <output_file> <build_command> <startup_command>
 ```
 
 For example:
 
 ```bash
-packaged path/to/project.py 'pip install .' 'python -m your_package'
+packaged path/to/project my_project.bin 'pip install .' 'python -m your_package'
 ```
 
 ## Local Development / Testing

@@ -42,7 +42,7 @@ def ensure_makeself() -> None:
     )
 
 
-def create_package(source_directory, build_command, startup_command):
+def create_package(source_directory, output_file, build_command, startup_command):
     """Create the makeself executable, with the startup script in it."""
     package_name = os.path.basename(source_directory)
 
@@ -86,8 +86,8 @@ def create_package(source_directory, build_command, startup_command):
         [
             MAKESELF_PATH,
             source_directory,
-            package_name,
-            package_name,
+            output_file,
+            output_file,
             # makeself wants the startup script path to be a relative path
             os.path.join(".", startup_script_name),
         ],
