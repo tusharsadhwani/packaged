@@ -67,9 +67,7 @@ def create_package(source_directory, build_command, startup_command):
     subprocess.check_call(
         [build_command],
         shell=True,
-        env={
-            "PATH": os.pathsep.join([packaged_python_path, os.environ.get("PATH", "")])
-        },
+        env={"PATH": os.pathsep.join([python_bin_folder, os.environ.get("PATH", "")])},
     )
 
     # copy the startup script to the source directory
