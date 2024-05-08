@@ -14,11 +14,24 @@ pip install packaged
 packaged <source_directory> <output_file> <build_command> <startup_command>
 ```
 
-For example:
+Such as:
 
 ```bash
 packaged path/to/project my_project.bin 'pip install .' 'python -m your_package'
 ```
+
+### Example
+
+There's an `example` folder where you can test this:
+
+```bash
+pip install packaged
+cd example
+packaged . curve 'pip install -r requirements.txt' 'python bubble_sort_curve.py'
+```
+
+This produces a `./curve` binary with Python 3.11 and `matplotlib`, which is
+directly executable.
 
 ## Local Development / Testing
 
