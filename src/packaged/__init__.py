@@ -46,8 +46,6 @@ def create_package(
     source_directory: str, output_file: str, build_command: str, startup_command: str
 ) -> None:
     """Create the makeself executable, with the startup script in it."""
-    package_name = os.path.basename(source_directory)
-
     packaged_python_path = os.path.join(source_directory, ".packaged_python")
     if os.path.exists(packaged_python_path):
         shutil.rmtree(packaged_python_path)
