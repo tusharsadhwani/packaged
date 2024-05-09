@@ -30,8 +30,16 @@ cd example
 packaged . curve 'pip install -r requirements.txt' 'python bubble_sort_curve.py'
 ```
 
-This produces a `./curve` binary with Python 3.11 and `matplotlib`, which is
-directly executable.
+This produces a `./curve` binary with:
+
+- Python 3.11
+- `matplotlib`
+- `numba`
+- `llvmlite`
+- `pillow`
+
+... and is directly executable. You can send this binary file to another machine
+with the same OS and architecture, and it will run the same.
 
 ## Local Development / Testing
 
