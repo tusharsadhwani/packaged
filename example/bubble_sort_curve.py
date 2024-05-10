@@ -42,7 +42,7 @@ def main():
     unsorted_datas = [num / 1000 for num in unsorted_datas]
 
     matplotlib.pyplot.plot(unsorted_datas)
-    # matplotlib.pyplot.show()
+    matplotlib.pyplot.show()
 
 
 if __name__ == "__main__":
