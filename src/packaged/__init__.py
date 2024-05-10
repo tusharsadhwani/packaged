@@ -46,54 +46,62 @@ def create_package(
     source_directory: str, output_file: str, build_command: str, startup_command: str
 ) -> None:
     """Create the makeself executable, with the startup script in it."""
+    startup_script_name = "_packaged_startup.sh"
+
     packaged_python_path = os.path.join(source_directory, ".packaged_python")
     if os.path.exists(packaged_python_path):
         shutil.rmtree(packaged_python_path)
 
-    python_version, python_bin_path = yen.ensure_python("3.11")
-    python_path = os.path.join(yen.PYTHON_INSTALLS_PATH, python_version)
-    python_bin_relpath = os.path.relpath(python_bin_path, python_path)
+    try:
+        python_version, python_bin_path = yen.ensure_python("3.11")
+        python_path = os.path.join(yen.PYTHON_INSTALLS_PATH, python_version)
+        python_bin_relpath = os.path.relpath(python_bin_path, python_path)
 
-    # Copy python to the source directory
-    shutil.copytree(python_path, packaged_python_path)
-    # Get the bin folder path relative to source directory
-    python_bin_folder = os.path.join(
-        packaged_python_path, os.path.dirname(python_bin_relpath)
-    )
-    python_bin_folder_relpath = os.path.relpath(python_bin_folder, source_directory)
+        # Copy the startup script to the source directory
+        startup_script_path = shutil.copyfile(
+            STARTUP_TEMPLATE_PATH, os.path.join(source_directory, startup_script_name)
+        )
 
-    # Run the build command in the source directory, while making sure
-    # that `python` and related binaries point to the installed python
-    subprocess.check_call(
-        [build_command],
-        shell=True,
-        env={"PATH": os.pathsep.join([python_bin_folder, os.environ.get("PATH", "")])},
-        cwd=source_directory,
-    )
+        # Put a standalone python interpreter inside the package
+        shutil.copytree(python_path, packaged_python_path)
 
-    # copy the startup script to the source directory
-    startup_script_name = "_packaged_startup.sh"
-    startup_script_path = shutil.copyfile(
-        STARTUP_TEMPLATE_PATH, os.path.join(source_directory, startup_script_name)
-    )
-    # Add the startup command right at the end of the startup script
-    with open(startup_script_path, "a") as startup_file:
-        startup_file.write(f"PATH={python_bin_folder_relpath}:$PATH\n")
-        startup_file.write(startup_command)
+        # Get the bin folder path relative to source directory
+        python_bin_folder = os.path.join(
+            packaged_python_path, os.path.dirname(python_bin_relpath)
+        )
+        python_bin_folder_relpath = os.path.relpath(python_bin_folder, source_directory)
 
-    os.chmod(startup_script_path, 0o777)
+        # Run the build command in the source directory, while making sure
+        # that `python` and related binaries point to the installed python
+        subprocess.check_call(
+            [build_command],
+            shell=True,
+            env={
+                "PATH": os.pathsep.join([python_bin_folder, os.environ.get("PATH", "")])
+            },
+            cwd=source_directory,
+        )
 
-    subprocess.check_call(
-        [
-            MAKESELF_PATH,
-            source_directory,
-            output_file,
-            output_file,
-            # makeself wants the startup script path to be a relative path
-            os.path.join(".", startup_script_name),
-        ],
-    )
+        # Add the startup command right at the end of the startup script
+        with open(startup_script_path, "a") as startup_file:
+            startup_file.write(f"PATH={python_bin_folder_relpath}:$PATH\n")
+            startup_file.write(startup_command)
 
-    # Cleanup the packaged python and startup script
-    os.remove(startup_script_path)
-    shutil.rmtree(packaged_python_path)
+        os.chmod(startup_script_path, 0o777)
+
+        subprocess.check_call(
+            [
+                MAKESELF_PATH,
+                source_directory,
+                output_file,
+                output_file,
+                # makeself wants the startup script path to be a relative path
+                os.path.join(".", startup_script_name),
+            ],
+        )
+    finally:
+        # Cleanup the packaged python and startup script
+        if os.path.exists(startup_script_path):
+            os.remove(startup_script_path)
+        if os.path.exists(packaged_python_path):
+            shutil.rmtree(packaged_python_path)
