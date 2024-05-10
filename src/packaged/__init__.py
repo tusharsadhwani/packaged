@@ -68,6 +68,7 @@ def create_package(
         [build_command],
         shell=True,
         env={"PATH": os.pathsep.join([python_bin_folder, os.environ.get("PATH", "")])},
+        cwd=source_directory,
     )
 
     # copy the startup script to the source directory
