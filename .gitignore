@@ -7,4 +7,6 @@ dist
 .tox
 .coverage
 src/packaged/.build_deps
-example/curve
+.packaged_python
+_packaged_startup.sh
+*.bin

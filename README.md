@@ -11,7 +11,7 @@ pip install packaged
 ## Usage
 
 ```bash
-packaged <source_directory> <output_file> <build_command> <startup_command>
+packaged <source_directory> <output_path> <build_command> <startup_command>
 ```
 
 Such as:
@@ -26,11 +26,10 @@ There's an `example` folder where you can test this:
 
 ```bash
 pip install packaged
-cd example
-packaged . curve 'pip install -r requirements.txt' 'python bubble_sort_curve.py'
+packaged ./example/matplotlib ./curve.bin 'pip install -r requirements.txt' 'python bubble_sort_curve.py'
 ```
 
-This produces a `./curve` binary with:
+This produces a `./curve.bin` binary with:
 
 - Python 3.11
 - `matplotlib`

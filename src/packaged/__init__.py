@@ -9,7 +9,6 @@ import urllib.request
 
 import yen
 
-STARTUP_TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), "startup.template.sh")
 
 MAKESELF_VERSION = "2.5.0"
 MAKESELF_DOWNLOAD_URL = (
@@ -43,31 +42,28 @@ def ensure_makeself() -> None:
 
 
 def create_package(
-    source_directory: str, output_file: str, build_command: str, startup_command: str
+    source_directory: str, output_path: str, build_command: str, startup_command: str
 ) -> None:
     """Create the makeself executable, with the startup script in it."""
     startup_script_name = "_packaged_startup.sh"
+    startup_script_path = os.path.join(source_directory, startup_script_name)
 
     packaged_python_path = os.path.join(source_directory, ".packaged_python")
     if os.path.exists(packaged_python_path):
         shutil.rmtree(packaged_python_path)
 
     try:
-        python_version, python_bin_path = yen.ensure_python("3.11")
-        python_path = os.path.join(yen.PYTHON_INSTALLS_PATH, python_version)
-        python_bin_relpath = os.path.relpath(python_bin_path, python_path)
-
-        # Copy the startup script to the source directory
-        startup_script_path = shutil.copyfile(
-            STARTUP_TEMPLATE_PATH, os.path.join(source_directory, startup_script_name)
-        )
+        # Use `yen` to ensure a portable Python is present on the system
+        python_version, yen_python_bin_path = yen.ensure_python("3.11")
+        yen_python_path = os.path.join(yen.PYTHON_INSTALLS_PATH, python_version)
+        yen_python_bin_relpath = os.path.relpath(yen_python_bin_path, yen_python_path)
 
         # Put a standalone python interpreter inside the package
-        shutil.copytree(python_path, packaged_python_path)
+        shutil.copytree(yen_python_path, packaged_python_path)
 
-        # Get the bin folder path relative to source directory
+        # Get the `python/bin` folder path relative to source directory
         python_bin_folder = os.path.join(
-            packaged_python_path, os.path.dirname(python_bin_relpath)
+            packaged_python_path, os.path.dirname(yen_python_bin_relpath)
         )
         python_bin_folder_relpath = os.path.relpath(python_bin_folder, source_directory)
 
@@ -82,25 +78,31 @@ def create_package(
             cwd=source_directory,
         )
 
-        # Add the startup command right at the end of the startup script
-        with open(startup_script_path, "a") as startup_file:
+        # The startup script is simply the startup command, prepended with a PATH
+        # change to ensure that `python` refers to the bundled python.
+        with open(startup_script_path, "w") as startup_file:
             startup_file.write(f"PATH={python_bin_folder_relpath}:$PATH\n")
             startup_file.write(startup_command)
 
         os.chmod(startup_script_path, 0o777)
 
+        # This uses `makeself` to build the binary
         subprocess.check_call(
             [
                 MAKESELF_PATH,
+                # Path to package
                 source_directory,
-                output_file,
-                output_file,
-                # makeself wants the startup script path to be a relative path
+                # Filename to output
+                output_path,
+                # Label for the package, for now it's just the filename
+                output_path,
+                # The command to run when starting the package.
+                # `makeself` wants the startup script path to be a relative path
                 os.path.join(".", startup_script_name),
             ],
         )
     finally:
-        # Cleanup the packaged python and startup script
+        # Cleanup the packaged python and startup script from source directory
         if os.path.exists(startup_script_path):
             os.remove(startup_script_path)
         if os.path.exists(packaged_python_path):

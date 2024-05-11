@@ -11,7 +11,7 @@ from packaged import ensure_makeself, create_package
 
 class CLIArgs:
     source_directory: str
-    output_file: str
+    output_path: str
     build_command: str
     startup_command: str
 
@@ -29,7 +29,7 @@ def cli(argv: list[str] | None = None) -> int:
         help="folder containing your python source to package",
         type=os.path.abspath,
     )
-    parser.add_argument("output_file", help="Filename for the generated binary")
+    parser.add_argument("output_path", help="Filename for the generated binary")
     parser.add_argument(
         "build_command", help="Python command to run when building the package"
     )
@@ -43,7 +43,7 @@ def cli(argv: list[str] | None = None) -> int:
     ensure_makeself()
     create_package(
         args.source_directory,
-        args.output_file,
+        args.output_path,
         args.build_command,
         args.startup_command,
     )
