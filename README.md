@@ -25,7 +25,6 @@ packaged path/to/project my_project.bin 'pip install .' 'python -m your_package'
 There's an `example` folder where you can test this:
 
 ```bash
-pip install packaged
 packaged ./example/matplotlib ./curve.bin 'pip install -r requirements.txt' 'python bubble_sort_curve.py'
 ```
 
