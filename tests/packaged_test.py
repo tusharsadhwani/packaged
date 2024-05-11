@@ -1,22 +1,12 @@
 import contextlib
 import os
 import subprocess
-import types
 from typing import Iterator
 
 import packaged
 
 
 TEST_PACKAGES = os.path.join(os.path.dirname(__file__), "test_packages")
-
-
-def setup_module(_: types.ModuleType) -> None:
-    """
-    Makeself needs to exist before any other test runs, so this runs
-    before the tests get collected, while testing `ensure_makeself()`.
-    """
-    packaged.ensure_makeself()
-    assert os.path.exists(packaged.MAKESELF_PATH)
 
 
 @contextlib.contextmanager
