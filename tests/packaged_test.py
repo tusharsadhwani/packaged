@@ -6,6 +6,15 @@ from typing import Iterator
 import packaged
 
 
+def setup_module(_):
+    """
+    Makeself needs to exist before any other test runs, so this runs
+    before the tests get collected, while testing `ensure_makeself()`.
+    """
+    packaged.ensure_makeself()
+    assert os.path.exists(packaged.MAKESELF_PATH)
+
+
 @contextlib.contextmanager
 def build_package(
     source_directory: str, output_path: str, build_command: str, startup_command: str
@@ -24,12 +33,6 @@ def build_package(
 def get_output(path: str) -> str:
     """Runs the executable with `--nox11` so that it still works as a subprocess."""
     return subprocess.check_output([path, "--nox11"]).decode()
-
-
-def test_ensure_makeself() -> None:
-    """Tests greet() from the package."""
-    packaged.ensure_makeself()
-    assert os.path.exists(packaged.MAKESELF_PATH)
 
 
 def test_just_python() -> None:

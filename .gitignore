@@ -5,7 +5,7 @@ venv*
 build
 dist
 .tox
-.coverage
+.coverage*
 src/packaged/.build_deps
 .packaged_python
 _packaged_startup.sh
