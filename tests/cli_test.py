@@ -1,3 +1,4 @@
+import os.path
 from unittest import mock
 
 from pytest import MonkeyPatch

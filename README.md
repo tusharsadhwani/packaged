@@ -42,6 +42,23 @@ This produces a `./curve.bin` binary with:
 
 That outputs an interactive graph GUI.
 
+### Minesweeper (using `packaged.toml` for configuration)
+
+You can use a `packaged.toml` file and simply do `packaged path/to/project` to
+create your package. For example, try the `minesweeper` project:
+
+```bash
+packaged ./example/minesweeper
+```
+
+[This configuration](tests/end_to_end/test_packages/minesweeper/packaged.toml)
+is used for building the package. The equivalent command to build the project
+without `pyproject.toml` would be:
+
+```bash
+packaged minesweeper.bin 'pip install .' 'python -m minesweeper' ./example/minesweeper
+```
+
 ### Textual Demo
 
 Since the dependencies themselves contain all the source code needed, you can
