@@ -32,10 +32,10 @@ def cli(argv: list[str] | None = None) -> int:
         error("Sorry, Windows is not supported yet. Ask for it on GitHub!")
         return 2
 
-    if len(argv) == 1 and config_file_exists(source_directory := argv[0]):
+    if len(argv) == 1 and config_file_exists(argv[0]):
         # Use values from config file instead
         try:
-            config = parse_config(source_directory)
+            config = parse_config(argv[0])
         except ConfigValidationError as exc:
             error(f"Expected key {exc.key!r} in config")
             return 3

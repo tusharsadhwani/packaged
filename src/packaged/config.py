@@ -13,7 +13,7 @@ else:
 class ConfigValidationError(Exception):
     """Raised when the toml config has some problem."""
 
-    def __init__(self, key) -> None:
+    def __init__(self, key: str) -> None:
         super().__init__(key)
         self.key = key
 
@@ -29,7 +29,7 @@ class Config:
 CONFIG_NAME = "./packaged.toml"
 
 
-def config_file_exists(source_directory: str) -> None:
+def config_file_exists(source_directory: str) -> bool:
     """Returns true if `packaged.toml` exists in current directory."""
     return os.path.isfile(os.path.join(source_directory, CONFIG_NAME))
 
@@ -43,15 +43,15 @@ def parse_config(source_directory: str) -> Config:
     build_command = "pip install ."
     startup_command = "python -m myproject"
     """
-    with open(os.path.join(source_directory, CONFIG_NAME), "rb") as config:
-        config = tomllib.load(config)
+    with open(os.path.join(source_directory, CONFIG_NAME), "rb") as config_file:
+        config_data = tomllib.load(config_file)
 
     try:
         config = Config(
             os.path.abspath(source_directory),
-            config["output_path"],
-            config["build_command"],
-            config["startup_command"],
+            config_data["output_path"],
+            config_data["build_command"],
+            config_data["startup_command"],
         )
     except KeyError as exc:
         key = exc.args[0]
