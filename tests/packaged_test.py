@@ -1,12 +1,16 @@
 import contextlib
 import os
 import subprocess
+import types
 from typing import Iterator
 
 import packaged
 
 
-def setup_module(_):
+TEST_PACKAGES = os.path.join(os.path.dirname(__file__), "test_packages")
+
+
+def setup_module(_: types.ModuleType) -> None:
     """
     Makeself needs to exist before any other test runs, so this runs
     before the tests get collected, while testing `ensure_makeself()`.
@@ -37,7 +41,7 @@ def get_output(path: str) -> str:
 
 def test_just_python() -> None:
     """Packages `just_python` to test packaging with no dependencies."""
-    package_path = os.path.join(os.path.dirname(__file__), "just_python")
+    package_path = os.path.join(TEST_PACKAGES, "just_python")
     executable_path = "./just_python.bin"
     with build_package(package_path, executable_path, "", "python foo.py"):
         assert "Although practicality beats purity." in get_output(executable_path)
@@ -45,7 +49,7 @@ def test_just_python() -> None:
 
 def test_numpy_pandas() -> None:
     """Packages `numpy_pandas` to test packaging the math stack."""
-    package_path = os.path.join(os.path.dirname(__file__), "numpy_pandas")
+    package_path = os.path.join(TEST_PACKAGES, "numpy_pandas")
     executable_path = "./numpy_pandas.bin"
     with build_package(
         package_path,
