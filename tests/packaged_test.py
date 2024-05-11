@@ -11,7 +11,10 @@ TEST_PACKAGES = os.path.join(os.path.dirname(__file__), "test_packages")
 
 @contextlib.contextmanager
 def build_package(
-    source_directory: str, output_path: str, build_command: str, startup_command: str
+    source_directory: str | None,
+    output_path: str,
+    build_command: str,
+    startup_command: str,
 ) -> Iterator[None]:
     """Builds the package, but also delete it afterwards."""
     try:

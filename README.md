@@ -17,15 +17,19 @@ packaged <source_directory> <output_path> <build_command> <startup_command>
 Such as:
 
 ```bash
-packaged path/to/project my_project.bin 'pip install .' 'python -m your_package'
+packaged my_project.bin 'pip install .' 'python -m your_package' path/to/project
 ```
 
-### Example
+## Examples
 
-There's an `example` folder where you can test this:
+All examples below create a self contained executable. You can send the produced
+binary file to another machine with the same OS and architecture, and it will
+run the same.
+
+### Graphs / matplotlib
 
 ```bash
-packaged ./example/matplotlib ./curve.bin 'pip install -r requirements.txt' 'python bubble_sort_curve.py'
+packaged ./curve.bin 'pip install -r requirements.txt' 'python bubble_sort_curve.py' ./example/matplotlib
 ```
 
 This produces a `./curve.bin` binary with:
@@ -36,20 +40,44 @@ This produces a `./curve.bin` binary with:
 - `llvmlite`
 - `pillow`
 
-... and is directly executable. You can send this binary file to another machine
-with the same OS and architecture, and it will run the same.
+That outputs an interactive graph GUI.
+
+### Textual Demo
+
+Since the dependencies themselves contain all the source code needed, you can
+skip the last argument. With this, no other files will be packaged other than
+what is produced in the build step.
+
+```bash
+packaged './textualdemo.bin' 'pip install textual' 'python -m textual'
+```
+
+This will simply package the `textual` library's own demo into a single file.
+
+### Chimp game (pygame)
+
+Pygame ships with various games as well, `pygame.examples.chimp` is one of them:
+
+```bash
+packaged './chimp' 'pip install pygame' 'python -m pygame.examples.chimp'
+```
+
+Another fun game that you can try out are `pygame.examples.aliens`.
 
 ## Local Development / Testing
+
+To test and modify the package locally:
 
 - Create and activate a virtual environment
 - Run `pip install -r requirements-dev.txt` to do an editable install
 - Run `pytest` to run tests
+- Make changes as needed
 
-## Type Checking
+### Type Checking
 
 Run `mypy .`
 
-## Create and upload a package to PyPI
+### Create and upload a package to PyPI
 
 Make sure to bump the version in `setup.cfg`.
 

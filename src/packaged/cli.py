@@ -6,7 +6,7 @@ import argparse
 import os.path
 import platform
 
-from packaged import ensure_makeself, create_package
+from packaged import SourceDirectoryNotFound, ensure_makeself, create_package
 
 
 class CLIArgs:
@@ -24,16 +24,18 @@ def error(message: str) -> None:
 def cli(argv: list[str] | None = None) -> int:
     """CLI interface."""
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "source_directory",
-        help="folder containing your python source to package",
-        type=os.path.abspath,
-    )
     parser.add_argument("output_path", help="Filename for the generated binary")
     parser.add_argument(
         "build_command", help="Python command to run when building the package"
     )
     parser.add_argument("startup_command", help="Command to run when the script starts")
+    parser.add_argument(
+        "source_directory",
+        help="Folder containing your python source to package",
+        type=os.path.abspath,
+        nargs="?",
+        default=None,
+    )
     args = parser.parse_args(argv, namespace=CLIArgs)
 
     if platform.system() == "Windows":
@@ -41,11 +43,14 @@ def cli(argv: list[str] | None = None) -> int:
         return 2
 
     ensure_makeself()
-    create_package(
-        args.source_directory,
-        args.output_path,
-        args.build_command,
-        args.startup_command,
-    )
+    try:
+        create_package(
+            args.source_directory,
+            args.output_path,
+            args.build_command,
+            args.startup_command,
+        )
+    except SourceDirectoryNotFound as exc:
+        error(f"Folder {exc.directory_path!r} does not exist.")
 
     return 0

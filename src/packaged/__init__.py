@@ -5,6 +5,7 @@ from __future__ import annotations
 import os.path
 import shutil
 import subprocess
+import tempfile
 import urllib.request
 
 import yen
@@ -19,6 +20,14 @@ MAKESELF_DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), ".build_deps")
 MAKESELF_PATH = os.path.join(
     MAKESELF_DOWNLOAD_PATH, f"makeself-{MAKESELF_VERSION}", "makeself.sh"
 )
+
+
+class SourceDirectoryNotFound(Exception):
+    """Raised when provided directory to package does not exist."""
+
+    def __init__(self, directory_path: str) -> None:
+        super().__init__(directory_path)
+        self.directory_path = directory_path
 
 
 def ensure_makeself() -> None:
@@ -42,9 +51,18 @@ def ensure_makeself() -> None:
 
 
 def create_package(
-    source_directory: str, output_path: str, build_command: str, startup_command: str
+    source_directory: str | None,
+    output_path: str,
+    build_command: str,
+    startup_command: str,
 ) -> None:
     """Create the makeself executable, with the startup script in it."""
+    if source_directory is None:
+        source_directory = tempfile.mkdtemp()
+
+    if not os.path.isdir(source_directory):
+        raise SourceDirectoryNotFound(source_directory)
+
     startup_script_name = "_packaged_startup.sh"
     startup_script_path = os.path.join(source_directory, startup_script_name)
 
