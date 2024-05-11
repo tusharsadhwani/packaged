@@ -11,7 +11,7 @@ pip install packaged
 ## Usage
 
 ```bash
-packaged <source_directory> <output_path> <build_command> <startup_command>
+packaged <output_path> <build_command> <startup_command> [<source_directory>]
 ```
 
 Such as:
