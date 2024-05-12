@@ -1,0 +1,3 @@
+output_path = "minesweeper.bin"
+build_command = "pip install ."
+startup_command = "python -m minesweeper"

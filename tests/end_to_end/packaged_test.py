@@ -6,6 +6,7 @@ import subprocess
 from typing import Iterator
 
 import packaged
+import packaged.config
 
 
 TEST_PACKAGES = os.path.join(os.path.dirname(__file__), "test_packages")
@@ -31,6 +32,8 @@ def build_package(
 
 def get_output(path: str) -> str:
     """Runs the executable with `--nox11` so that it still works as a subprocess."""
+    if not path.startswith((".", "/")):
+        path = "./" + path
     return subprocess.check_output([path, "--nox11"]).decode()
 
 
@@ -53,3 +56,17 @@ def test_numpy_pandas() -> None:
         "python somefile.py",
     ):
         assert "0   -2.222222\ndtype: float64" in get_output(executable_path)
+
+
+def test_config_parsing() -> None:
+    """Packages `configtest` to ensure config parsing works as expected."""
+    package_path = os.path.join(TEST_PACKAGES, "configtest")
+    config = packaged.config.parse_config(package_path)
+
+    with build_package(
+        config.source_directory,
+        config.output_path,
+        config.build_command,
+        config.startup_command,
+    ):
+        assert "('R', 'G', 'B')\n('C', 'M', 'Y', 'K')" in get_output(config.output_path)
