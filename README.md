@@ -2,6 +2,11 @@
 
 The easiest way to ship python applications.
 
+![Demo](https://github.com/tusharsadhwani/packaged/blob/main/demo.jpg)
+
+`packaged` can take any Python project, and package it into a self contained
+executable, that can run on other machines without needing Python installed.
+
 ## Installation
 
 ```bash
