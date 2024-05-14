@@ -21,5 +21,5 @@ def pytest_sessionstart(session: pytest.Session) -> None:
 
         return
 
-    _, python_bin_path = packaged.ensure_python()
+    _, python_bin_path = packaged.ensure_python("3.12")
     assert os.path.isfile(python_bin_path)
