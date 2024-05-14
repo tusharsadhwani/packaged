@@ -71,7 +71,7 @@ skip the last argument. With this, no other files will be packaged other than
 what is produced in the build step.
 
 ```bash
-packaged './textualdemo.bin' 'pip install textual' 'python -m textual'
+packaged ./textualdemo.bin 'pip install textual' 'python -m textual'
 ```
 
 This will simply package the `textual` library's own demo into a single file.
@@ -81,7 +81,7 @@ This will simply package the `textual` library's own demo into a single file.
 Pygame ships with various games as well, `pygame.examples.aliens` is one of them:
 
 ```bash
-packaged './aliens' 'pip install pygame' 'python -m pygame.examples.aliens'
+packaged ./aliens 'pip install pygame' 'python -m pygame.examples.aliens'
 ```
 
 Another one that you can try out is `pygame.examples.chimp`.
