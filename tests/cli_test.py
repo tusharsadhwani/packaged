@@ -9,9 +9,6 @@ import packaged.cli
 
 def test_cli(monkeypatch: MonkeyPatch) -> None:
     """Ensures that CLI passes args to `create_package()` properly."""
-    # Don't want to run makeself while testing CLI
-    monkeypatch.setattr(packaged.cli, "ensure_makeself", lambda: None)
-
     with mock.patch.object(packaged.cli, "create_package") as mocked:
         packaged.cli.cli(["./foo", "pip install foo", "python -m foo"])
 

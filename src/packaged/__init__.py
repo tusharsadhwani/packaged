@@ -6,20 +6,11 @@ import os.path
 import shutil
 import subprocess
 import tempfile
-import urllib.request
 
 import yen
 
 
-MAKESELF_VERSION = "2.5.0"
-MAKESELF_DOWNLOAD_URL = (
-    "https://github.com/megastep/makeself/releases/download/"
-    f"release-{MAKESELF_VERSION}/makeself-{MAKESELF_VERSION}.run"
-)
-MAKESELF_DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), ".build_deps")
-MAKESELF_PATH = os.path.join(
-    MAKESELF_DOWNLOAD_PATH, f"makeself-{MAKESELF_VERSION}", "makeself.sh"
-)
+MAKESELF_PATH = os.path.join(os.path.dirname(__file__), "makeself.sh")
 
 
 class SourceDirectoryNotFound(Exception):
@@ -28,26 +19,6 @@ class SourceDirectoryNotFound(Exception):
     def __init__(self, directory_path: str) -> None:
         super().__init__(directory_path)
         self.directory_path = directory_path
-
-
-def ensure_makeself() -> None:
-    """If `makeself.sh` doesn't exist, downloads it."""
-    if os.path.exists(MAKESELF_PATH):
-        return
-
-    if not os.path.exists(MAKESELF_DOWNLOAD_PATH):
-        os.mkdir(MAKESELF_DOWNLOAD_PATH)
-
-    makeself_run_path = os.path.join(MAKESELF_DOWNLOAD_PATH, "makeself.run")
-    urllib.request.urlretrieve(MAKESELF_DOWNLOAD_URL, makeself_run_path)
-
-    os.chmod(makeself_run_path, 0o777)
-    subprocess.check_call(
-        [makeself_run_path, "--nox11"],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        cwd=MAKESELF_DOWNLOAD_PATH,
-    )
 
 
 def create_package(
@@ -72,7 +43,7 @@ def create_package(
 
     try:
         # Use `yen` to ensure a portable Python is present on the system
-        python_version, yen_python_bin_path = yen.ensure_python("3.11")
+        python_version, yen_python_bin_path = ensure_python()
         yen_python_path = os.path.join(yen.PYTHON_INSTALLS_PATH, python_version)
         yen_python_bin_relpath = os.path.relpath(yen_python_bin_path, yen_python_path)
 
@@ -125,3 +96,11 @@ def create_package(
             os.remove(startup_script_path)
         if os.path.exists(packaged_python_path):
             shutil.rmtree(packaged_python_path)
+
+
+def ensure_python() -> tuple[str, str]:
+    """
+    Checks that the version of Python we want to use is available on the
+    system, and if not, downloads it.
+    """
+    return yen.ensure_python("3.11")

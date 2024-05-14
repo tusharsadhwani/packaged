@@ -7,7 +7,7 @@ import os.path
 import platform
 import sys
 
-from packaged import SourceDirectoryNotFound, ensure_makeself, create_package
+from packaged import SourceDirectoryNotFound, create_package
 from packaged.config import (
     Config,
     ConfigValidationError,
@@ -72,7 +72,6 @@ def cli(argv: list[str] | None = None) -> int:
             args.startup_command,
         )
 
-    ensure_makeself()
     try:
         create_package(source_directory, output_path, build_command, startup_command)
     except SourceDirectoryNotFound as exc:

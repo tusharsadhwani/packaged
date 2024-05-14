@@ -110,3 +110,14 @@ Then upload it to PyPI using [twine](https://twine.readthedocs.io/en/latest/#ins
 ```bash
 twine upload dist/*
 ```
+
+## License
+
+The package is Licensed under GNU General Public License v2 (GPLv2). However,
+note that **the packages created with `packaged` are NOT licensed under GPL**.
+This is because the archives created are just data for the package, and
+`packaged` is not a part of the archives created.
+
+That means that you can freely use `packaged` for commercial use.
+
+Read the [License section for Makeself](https://github.com/megastep/makeself?tab=readme-ov-file#license) for more information.
