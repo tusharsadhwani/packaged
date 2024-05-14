@@ -7,7 +7,7 @@ import os.path
 import platform
 import sys
 
-from packaged import SourceDirectoryNotFound, create_package
+from packaged import PythonNotAvailable, SourceDirectoryNotFound, create_package
 from packaged.config import (
     Config,
     ConfigValidationError,
@@ -40,11 +40,18 @@ def cli(argv: list[str] | None = None) -> int:
             error(f"Expected key {exc.key!r} in config")
             return 3
 
-        source_directory, output_path, build_command, startup_command = (
+        (
+            source_directory,
+            output_path,
+            build_command,
+            startup_command,
+            python_version,
+        ) = (
             config.source_directory,
             config.output_path,
             config.build_command,
             config.startup_command,
+            config.python_version,
         )
 
     else:
@@ -63,6 +70,12 @@ def cli(argv: list[str] | None = None) -> int:
             nargs="?",
             default=None,
         )
+        parser.add_argument(
+            "--python-version",
+            metavar="3.12",
+            help="Version of Python to package your project with.",
+            default="3.12",
+        )
         args = parser.parse_args(argv, namespace=Config)
 
         source_directory, output_path, build_command, startup_command = (
@@ -73,8 +86,18 @@ def cli(argv: list[str] | None = None) -> int:
         )
 
     try:
-        create_package(source_directory, output_path, build_command, startup_command)
+        create_package(
+            source_directory,
+            output_path,
+            build_command,
+            startup_command,
+            python_version,
+        )
     except SourceDirectoryNotFound as exc:
         error(f"Folder {exc.directory_path!r} does not exist.")
+        return 4
+    except PythonNotAvailable as exc:
+        error(f"Python {exc.python_version!r} is not available for download.")
+        return 5
 
     return 0

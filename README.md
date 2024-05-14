@@ -39,7 +39,7 @@ packaged ./curve.bin 'pip install -r requirements.txt' 'python bubble_sort_curve
 
 This produces a `./curve.bin` binary with:
 
-- Python 3.11
+- Python 3.12
 - `matplotlib`
 - `numba`
 - `llvmlite`
@@ -56,7 +56,7 @@ create your package. For example, try the `minesweeper` project:
 packaged ./example/minesweeper
 ```
 
-[This configuration](tests/end_to_end/test_packages/minesweeper/packaged.toml)
+[This configuration](https://github.com/tusharsadhwani/packaged/blob/main/example/minesweeper/packaged.toml)
 is used for building the package. The equivalent command to build the project
 without `pyproject.toml` would be:
 
