@@ -71,15 +71,15 @@ packaged './textualdemo.bin' 'pip install textual' 'python -m textual'
 
 This will simply package the `textual` library's own demo into a single file.
 
-### Chimp game (pygame)
+### Aliens (pygame)
 
-Pygame ships with various games as well, `pygame.examples.chimp` is one of them:
+Pygame ships with various games as well, `pygame.examples.aliens` is one of them:
 
 ```bash
-packaged './chimp' 'pip install pygame' 'python -m pygame.examples.chimp'
+packaged './aliens' 'pip install pygame' 'python -m pygame.examples.aliens'
 ```
 
-Another fun game that you can try out are `pygame.examples.aliens`.
+Another one that you can try out is `pygame.examples.chimp`.
 
 ## Local Development / Testing
 
