@@ -26,7 +26,7 @@ def build_package(
             output_path,
             build_command,
             startup_command,
-            python_version="3.12",
+            python_version=packaged.DEFAULT_PYTHON_VERSION,
         )
         yield
     finally:

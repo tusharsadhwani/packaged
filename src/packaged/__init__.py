@@ -11,6 +11,7 @@ import yen.github
 
 
 MAKESELF_PATH = os.path.join(os.path.dirname(__file__), "makeself.sh")
+DEFAULT_PYTHON_VERSION = "3.12"
 
 
 class SourceDirectoryNotFound(Exception):

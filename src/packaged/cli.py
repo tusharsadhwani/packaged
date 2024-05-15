@@ -7,9 +7,13 @@ import os.path
 import platform
 import sys
 
-from packaged import PythonNotAvailable, SourceDirectoryNotFound, create_package
+from packaged import (
+    DEFAULT_PYTHON_VERSION,
+    PythonNotAvailable,
+    SourceDirectoryNotFound,
+    create_package,
+)
 from packaged.config import (
-    Config,
     ConfigValidationError,
     config_file_exists,
     parse_config,
@@ -72,11 +76,11 @@ def cli(argv: list[str] | None = None) -> int:
         )
         parser.add_argument(
             "--python-version",
-            metavar="3.12",
+            metavar=DEFAULT_PYTHON_VERSION,
             help="Version of Python to package your project with.",
-            default="3.12",
+            default=DEFAULT_PYTHON_VERSION,
         )
-        args = parser.parse_args(argv, namespace=Config)
+        args = parser.parse_args(argv)
 
         (
             source_directory,

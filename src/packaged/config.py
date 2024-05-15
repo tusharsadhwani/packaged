@@ -53,6 +53,7 @@ def parse_config(source_directory: str) -> Config:
             config_data["output_path"],
             config_data["build_command"],
             config_data["startup_command"],
+            config_data.get("python_version", "3.12"),
         )
     except KeyError as exc:
         key = exc.args[0]
