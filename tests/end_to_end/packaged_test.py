@@ -18,7 +18,6 @@ def build_package(
     output_path: str,
     build_command: str,
     startup_command: str,
-    python_version: str,
 ) -> Iterator[None]:
     """Builds the package, but also delete it afterwards."""
     try:
@@ -27,7 +26,7 @@ def build_package(
             output_path,
             build_command,
             startup_command,
-            python_version,
+            python_version="3.12",
         )
         yield
     finally:
