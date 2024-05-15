@@ -18,11 +18,16 @@ def build_package(
     output_path: str,
     build_command: str,
     startup_command: str,
+    python_version: str,
 ) -> Iterator[None]:
     """Builds the package, but also delete it afterwards."""
     try:
         packaged.create_package(
-            source_directory, output_path, build_command, startup_command
+            source_directory,
+            output_path,
+            build_command,
+            startup_command,
+            python_version,
         )
         yield
     finally:
