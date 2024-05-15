@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import os.path
 import platform
 import sys
+import typing
 
 from packaged import (
     DEFAULT_PYTHON_VERSION,
@@ -14,6 +16,7 @@ from packaged import (
     create_package,
 )
 from packaged.config import (
+    Config,
     ConfigValidationError,
     config_file_exists,
     parse_config,
@@ -44,20 +47,6 @@ def cli(argv: list[str] | None = None) -> int:
             error(f"Expected key {exc.key!r} in config")
             return 3
 
-        (
-            source_directory,
-            output_path,
-            build_command,
-            startup_command,
-            python_version,
-        ) = (
-            config.source_directory,
-            config.output_path,
-            config.build_command,
-            config.startup_command,
-            config.python_version,
-        )
-
     else:
         parser = argparse.ArgumentParser()
         parser.add_argument("output_path", help="Filename for the generated binary")
@@ -81,28 +70,15 @@ def cli(argv: list[str] | None = None) -> int:
             default=DEFAULT_PYTHON_VERSION,
         )
         args = parser.parse_args(argv)
-
-        (
-            source_directory,
-            output_path,
-            build_command,
-            startup_command,
-            python_version,
-        ) = (
-            args.source_directory,
-            args.output_path,
-            args.build_command,
-            args.startup_command,
-            args.python_version,
-        )
+        config = Config(**vars(args))
 
     try:
         create_package(
-            source_directory,
-            output_path,
-            build_command,
-            startup_command,
-            python_version,
+            config.source_directory,
+            config.output_path,
+            config.build_command,
+            config.startup_command,
+            config.python_version,
         )
     except SourceDirectoryNotFound as exc:
         error(f"Folder {exc.directory_path!r} does not exist.")
