@@ -78,11 +78,18 @@ def cli(argv: list[str] | None = None) -> int:
         )
         args = parser.parse_args(argv, namespace=Config)
 
-        source_directory, output_path, build_command, startup_command = (
+        (
+            source_directory,
+            output_path,
+            build_command,
+            startup_command,
+            python_version,
+        ) = (
             args.source_directory,
             args.output_path,
             args.build_command,
             args.startup_command,
+            args.python_version,
         )
 
     try:
