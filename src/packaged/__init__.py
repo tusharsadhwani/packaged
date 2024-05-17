@@ -7,10 +7,11 @@ import shutil
 import subprocess
 import tempfile
 
-import yen
+import yen.github
 
 
 MAKESELF_PATH = os.path.join(os.path.dirname(__file__), "makeself.sh")
+DEFAULT_PYTHON_VERSION = "3.12"
 
 
 class SourceDirectoryNotFound(Exception):
@@ -21,11 +22,20 @@ class SourceDirectoryNotFound(Exception):
         self.directory_path = directory_path
 
 
+class PythonNotAvailable(Exception):
+    """Raised when the Python version asked for is not available for download."""
+
+    def __init__(self, python_version: str) -> None:
+        super().__init__(python_version)
+        self.python_version = python_version
+
+
 def create_package(
     source_directory: str | None,
     output_path: str,
     build_command: str,
     startup_command: str,
+    python_version: str,
 ) -> None:
     """Create the makeself executable, with the startup script in it."""
     if source_directory is None:
@@ -43,7 +53,7 @@ def create_package(
 
     try:
         # Use `yen` to ensure a portable Python is present on the system
-        python_version, yen_python_bin_path = ensure_python()
+        python_version, yen_python_bin_path = ensure_python(python_version)
         yen_python_path = os.path.join(yen.PYTHON_INSTALLS_PATH, python_version)
         yen_python_bin_relpath = os.path.relpath(yen_python_bin_path, yen_python_path)
 
@@ -98,9 +108,12 @@ def create_package(
             shutil.rmtree(packaged_python_path)
 
 
-def ensure_python() -> tuple[str, str]:
+def ensure_python(version: str) -> tuple[str, str]:
     """
     Checks that the version of Python we want to use is available on the
     system, and if not, downloads it.
     """
-    return yen.ensure_python("3.11")
+    try:
+        return yen.ensure_python(version)
+    except yen.github.NotAvailable:
+        raise PythonNotAvailable(version)

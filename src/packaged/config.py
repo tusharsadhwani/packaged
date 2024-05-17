@@ -24,6 +24,7 @@ class Config:
     output_path: str
     build_command: str
     startup_command: str
+    python_version: str
 
 
 CONFIG_NAME = "./packaged.toml"
@@ -52,6 +53,7 @@ def parse_config(source_directory: str) -> Config:
             config_data["output_path"],
             config_data["build_command"],
             config_data["startup_command"],
+            config_data.get("python_version", "3.12"),
         )
     except KeyError as exc:
         key = exc.args[0]

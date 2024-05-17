@@ -2,18 +2,31 @@ from __future__ import annotations
 
 from unittest import mock
 
-from pytest import MonkeyPatch
-
+import packaged
 import packaged.cli
 
 
-def test_cli(monkeypatch: MonkeyPatch) -> None:
+def test_cli() -> None:
     """Ensures that CLI passes args to `create_package()` properly."""
     with mock.patch.object(packaged.cli, "create_package") as mocked:
         packaged.cli.cli(["./foo", "pip install foo", "python -m foo"])
 
     # source_directory is None
-    mocked.assert_called_with(None, "./foo", "pip install foo", "python -m foo")
+    mocked.assert_called_with(
+        None,
+        "./foo",
+        "pip install foo",
+        "python -m foo",
+        packaged.DEFAULT_PYTHON_VERSION,
+    )
+
+    with mock.patch.object(packaged.cli, "create_package") as mocked:
+        packaged.cli.cli(
+            ["./baz", "pip install baz", "python -m baz", "--python-version=3.10"]
+        )
+
+    # specified python version
+    mocked.assert_called_with(None, "./baz", "pip install baz", "python -m baz", "3.10")
 
     with mock.patch.object(packaged.cli, "create_package") as mocked:
         packaged.cli.cli(
@@ -31,6 +44,7 @@ def test_cli(monkeypatch: MonkeyPatch) -> None:
         "./bar",
         "pip install -rrequirements.txt",
         "python src/mypackage/cli.py",
+        packaged.DEFAULT_PYTHON_VERSION,
     )
     args = mocked.call_args[0]
     assert args[0].endswith("/mypackage")
