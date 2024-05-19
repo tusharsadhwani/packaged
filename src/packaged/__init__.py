@@ -97,18 +97,30 @@ def create_package(
                     continue
 
                 shebang_command = file.readline()
+                first_line = file.readline()
+                second_line = file.readline()
                 rest_of_file = file.read()
-                contents = shebang_command + rest_of_file
-                print(f"{filepath = } contents=>{contents}***")
 
-            print(f"{packaged_python_path = }")
-            if not shebang_command.startswith(packaged_python_path.encode()):
+            # Case 1: shebang points to packaged python
+            if shebang_command.startswith(packaged_python_path.encode()):
+                # rewrite this file to have a `env python` shebang
+                with open(filepath, "wb") as file:
+                    file.write(b"#!/usr/bin/env python\n")
+                    file.write(first_line)
+                    file.write(second_line)
+                    file.write(rest_of_file)
+            # Case 2: shebang is bin/sh, but the script is an `exec`
+            # with the shebang to packaged python
+            elif first_line.startswith(b"'''exec' " + packaged_python_path.encode()):
+                # rewrite this file to have a `env python` shebang,
+                # and get rid of the first two lines as they're not needed
+                assert second_line == b"' '''\n"
+                with open(filepath, "wb") as file:
+                    file.write(b"#!/usr/bin/env python\n")
+                    file.write(rest_of_file)
+                first_line
+            else:
                 continue
-
-            # rewrite this file to have a `env python` shebang
-            with open(filepath, "wb") as file:
-                file.write(b"#!/usr/bin/env python\n")
-                file.write(rest_of_file)
 
         # This uses `makeself` to build the binary
         subprocess.check_call(
