@@ -31,6 +31,9 @@ All examples below create a self contained executable. You can send the produced
 binary file to another machine with the same OS and architecture, and it will
 run the same.
 
+You can also download pre-built binaries for these packages from the
+[Releases page](https://github.com/tusharsadhwani/packaged/releases/latest).
+
 ### Mandelbrot (`numpy`, `matplotlib`, GUI)
 
 ```bash
