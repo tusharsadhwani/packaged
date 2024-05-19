@@ -97,7 +97,7 @@ def create_package(
                     continue
 
                 shebang_command = file.readline()
-                print(f"{shebang_command = }")
+                print(f"{filepath = } {shebang_command = }")
                 rest_of_file = file.read()
 
             print(f"{packaged_python_path = }")
