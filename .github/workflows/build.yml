@@ -16,9 +16,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  XDG_CACHE_HOME: ${{ github.workspace }}/.cache
-
 jobs:
   build:
     name: ${{ matrix.name }}
@@ -85,6 +82,11 @@ jobs:
           TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
           packaged $TEXTUAL_NAME 'pip install pygame' 'python -m textual'
 
+          # IPython: requires no source
+          IPYTHON_NAME="ipython-${{ matrix.target }}.bin"
+          IPYTHON_PATH=${PWD}/${IPYTHON_NAME}
+          packaged $IPYTHON_NAME 'pip install ipython' 'ipython'
+
           # ./examples/mandelbrot
           MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.bin"
           MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
@@ -101,6 +103,8 @@ jobs:
           echo "ALIENS_PATH=${ALIENS_PATH}" >> $GITHUB_OUTPUT
           echo "TEXTUAL_NAME=${TEXTUAL_NAME}" >> $GITHUB_OUTPUT
           echo "TEXTUAL_PATH=${TEXTUAL_PATH}" >> $GITHUB_OUTPUT
+          echo "IPYTHON_NAME=${IPYTHON_NAME}" >> $GITHUB_OUTPUT
+          echo "IPYTHON_PATH=${IPYTHON_PATH}" >> $GITHUB_OUTPUT
           echo "MANDELBROT_NAME=${MANDELBROT_NAME}" >> $GITHUB_OUTPUT
           echo "MANDELBROT_PATH=${MANDELBROT_PATH}" >> $GITHUB_OUTPUT
           echo "MINESWEEPER_NAME=${MINESWEEPER_NAME}" >> $GITHUB_OUTPUT
@@ -117,6 +121,12 @@ jobs:
         with:
           name: ${{ steps.build.outputs.TEXTUAL_NAME }}
           path: ${{ steps.build.outputs.TEXTUAL_PATH }}
+
+      - name: Upload IPython
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.IPYTHON_NAME }}
+          path: ${{ steps.build.outputs.IPYTHON_PATH }}
 
       - name: Upload mandelbrot
         uses: actions/upload-artifact@v4
