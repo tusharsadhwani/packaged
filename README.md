@@ -31,13 +31,13 @@ All examples below create a self contained executable. You can send the produced
 binary file to another machine with the same OS and architecture, and it will
 run the same.
 
-### Graphs / matplotlib
+### Mandelbrot (`numpy`, `matplotlib`, GUI)
 
 ```bash
-packaged ./curve.bin 'pip install -r requirements.txt' 'python bubble_sort_curve.py' ./example/matplotlib
+packaged ./mandelbrot.bin 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
 ```
 
-This produces a `./curve.bin` binary with:
+This produces a `./mandelbrot.bin` binary with:
 
 - Python 3.12
 - `matplotlib`
@@ -45,7 +45,7 @@ This produces a `./curve.bin` binary with:
 - `llvmlite`
 - `pillow`
 
-That outputs an interactive graph GUI.
+That outputs an interactive mandelbrot set GUI.
 
 ### Minesweeper (using `packaged.toml` for configuration)
 
@@ -64,14 +64,14 @@ without `pyproject.toml` would be:
 packaged minesweeper.bin 'pip install .' 'python -m minesweeper' ./example/minesweeper
 ```
 
-### Textual Demo
+### Textual (TUI) Demo
 
 Since the dependencies themselves contain all the source code needed, you can
 skip the last argument. With this, no other files will be packaged other than
 what is produced in the build step.
 
 ```bash
-packaged ./textualdemo.bin 'pip install textual' 'python -m textual'
+packaged ./textual.bin 'pip install textual' 'python -m textual'
 ```
 
 This will simply package the `textual` library's own demo into a single file.

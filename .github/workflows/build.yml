@@ -75,10 +75,20 @@ jobs:
         id: build
         shell: bash
         run: |
-          # ./examples/matplotlib
-          MATPLOTLIB_NAME="matplotlib-${{ matrix.target }}.bin"
-          MATPLOTLIB_PATH=${PWD}/${MATPLOTLIB_NAME}
-          packaged $MATPLOTLIB_NAME 'pip install -r requirements.txt' 'python bubble_sort_curve.py' ./example/matplotlib
+          # aliens: requires no source
+          ALIENS_NAME="aliens-${{ matrix.target }}.bin"
+          ALIENS_PATH=${PWD}/${ALIENS_NAME}
+          packaged $ALIENS_NAME 'pip install pygame' 'python -m pygame.examples.aliens'
+
+          # textual: requires no source
+          TEXTUAL_NAME="textual-${{ matrix.target }}.bin"
+          TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
+          packaged $TEXTUAL_NAME 'pip install pygame' 'python -m textual'
+
+          # ./examples/mandelbrot
+          MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.bin"
+          MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
+          packaged $MANDELBROT_NAME 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
 
           # ./examples/minesweeper
           MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.bin"
@@ -87,16 +97,32 @@ jobs:
           mv ./minesweeper.bin $MINESWEEPER_NAME
 
           # Setup output paths for upload
-          echo "MATPLOTLIB_NAME=${MATPLOTLIB_NAME}" >> $GITHUB_OUTPUT
-          echo "MATPLOTLIB_PATH=${MATPLOTLIB_PATH}" >> $GITHUB_OUTPUT
+          echo "ALIENS_NAME=${ALIENS_NAME}" >> $GITHUB_OUTPUT
+          echo "ALIENS_PATH=${ALIENS_PATH}" >> $GITHUB_OUTPUT
+          echo "TEXTUAL_NAME=${TEXTUAL_NAME}" >> $GITHUB_OUTPUT
+          echo "TEXTUAL_PATH=${TEXTUAL_PATH}" >> $GITHUB_OUTPUT
+          echo "MANDELBROT_NAME=${MANDELBROT_NAME}" >> $GITHUB_OUTPUT
+          echo "MANDELBROT_PATH=${MANDELBROT_PATH}" >> $GITHUB_OUTPUT
           echo "MINESWEEPER_NAME=${MINESWEEPER_NAME}" >> $GITHUB_OUTPUT
           echo "MINESWEEPER_PATH=${MINESWEEPER_PATH}" >> $GITHUB_OUTPUT
 
-      - name: Upload matplotlib
+      - name: Upload aliens
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build.outputs.MATPLOTLIB_NAME }}
-          path: ${{ steps.build.outputs.MATPLOTLIB_PATH }}
+          name: ${{ steps.build.outputs.ALIENS_NAME }}
+          path: ${{ steps.build.outputs.ALIENS_PATH }}
+
+      - name: Upload textual
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.TEXTUAL_NAME }}
+          path: ${{ steps.build.outputs.TEXTUAL_PATH }}
+
+      - name: Upload mandelbrot
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.MANDELBROT_NAME }}
+          path: ${{ steps.build.outputs.MANDELBROT_PATH }}
 
       - name: Upload minesweeper
         uses: actions/upload-artifact@v4
@@ -110,7 +136,7 @@ jobs:
         with:
           draft: true
           files: |
-            ${{ steps.build.outputs.MATPLOTLIB_PATH }}
+            ${{ steps.build.outputs.MANDELBROT_PATH }}
             ${{ steps.build.outputs.MINESWEEPER_PATH }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
