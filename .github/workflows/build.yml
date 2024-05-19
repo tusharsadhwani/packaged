@@ -110,6 +110,7 @@ jobs:
         with:
           draft: true
           files: |
+            ${{ steps.build.outputs.MATPLOTLIB_PATH }}
             ${{ steps.build.outputs.MINESWEEPER_PATH }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
