@@ -1,0 +1,101 @@
+name: Build binaries for all platforms
+
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      # - main
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  XDG_CACHE_HOME: ${{ github.workspace }}/.cache
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {
+              name: "Linux-x86_64",
+              target: x86_64-unknown-linux-musl,
+              os: ubuntu-20.04,
+            }
+          - {
+              name: "Linux-aarch64",
+              target: aarch64-unknown-linux-musl,
+              os: ubuntu-latest,
+            }
+          - {
+              name: "macOS-x86_64",
+              target: x86_64-apple-darwin,
+              os: macOS-latest,
+            }
+          - {
+              name: "macOS-aarch64",
+              target: aarch64-apple-darwin,
+              os: macOS-latest,
+            }
+          - {
+              name: "windows-x86_64",
+              target: x86_64-pc-windows-msvc,
+              os: windows-latest,
+            }
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Check for release
+        id: is-release
+        shell: bash
+        run: |
+          unset IS_RELEASE ; if [[ $GITHUB_REF =~ ^refs/tags/v[0-9].* ]]; then IS_RELEASE='true' ; fi
+          echo "IS_RELEASE=${IS_RELEASE}" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install packaged
+        run: |
+          pip install .
+
+      - name: Build binary
+        id: build
+        shell: bash
+        run: |
+          BIN_NAME="minesweeper-${{ matrix.target }}.bin"
+          BIN_PATH=${PWD}/${BIN_NAME}
+
+          packaged ./example/minesweeper
+          mv ./minesweeper.bin $BIN_NAME
+
+          echo "BIN_NAME=${BIN_NAME}" >> $GITHUB_OUTPUT
+          echo "BIN_PATH=${BIN_PATH}" >> $GITHUB_OUTPUT
+
+      - name: Artifact upload
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ steps.build.outputs.BIN_NAME }}
+          path: ${{ steps.build.outputs.BIN_PATH }}
+
+      - name: Publish packages
+        uses: softprops/action-gh-release@v1
+        if: steps.is-release.outputs.IS_RELEASE
+        with:
+          draft: true
+          files: |
+            ${{ steps.build.outputs.BIN_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
