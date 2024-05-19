@@ -97,8 +97,9 @@ def create_package(
                     continue
 
                 shebang_command = file.readline()
-                print(f"{filepath = } {shebang_command = }")
                 rest_of_file = file.read()
+                contents = shebang_command + rest_of_file
+                print(f"{filepath = } contents=>{contents}***")
 
             print(f"{packaged_python_path = }")
             if not shebang_command.startswith(packaged_python_path.encode()):
