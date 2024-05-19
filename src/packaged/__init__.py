@@ -85,6 +85,28 @@ def create_package(
 
         os.chmod(startup_script_path, 0o777)
 
+        # Patch console scripts, replacing the shebang with /usr/bin/env
+        for filename in os.listdir(python_bin_folder):
+            filepath = os.path.join(python_bin_folder, filename)
+            if not os.path.isfile(filepath):
+                continue
+
+            with open(filepath, "rb") as file:
+                first_two_bytes = file.read(2)
+                if first_two_bytes != b"#!":
+                    continue
+
+                shebang_command = file.readline()
+                rest_of_file = file.read()
+
+            if not shebang_command.startswith(packaged_python_path.encode()):
+                continue
+
+            # rewrite this file to have a `env python` shebang
+            with open(filepath, "wb") as file:
+                file.write(b"#!/usr/bin/env python\n")
+                file.write(rest_of_file)
+
         # This uses `makeself` to build the binary
         subprocess.check_call(
             [
