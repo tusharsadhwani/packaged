@@ -75,20 +75,34 @@ jobs:
         id: build
         shell: bash
         run: |
-          BIN_NAME="minesweeper-${{ matrix.target }}.bin"
-          BIN_PATH=${PWD}/${BIN_NAME}
+          # ./examples/matplotlib
+          MATPLOTLIB_NAME="matplotlib-${{ matrix.target }}.bin"
+          MATPLOTLIB_PATH=${PWD}/${MATPLOTLIB_NAME}
+          packaged $MATPLOTLIB_NAME 'pip install -r requirements.txt' 'python bubble_sort_curve.py' ./example/matplotlib
 
+          # ./examples/minesweeper
+          MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.bin"
+          MINESWEEPER_PATH=${PWD}/${MINESWEEPER_NAME}
           packaged ./example/minesweeper
-          mv ./minesweeper.bin $BIN_NAME
+          mv ./minesweeper.bin $MINESWEEPER_NAME
 
-          echo "BIN_NAME=${BIN_NAME}" >> $GITHUB_OUTPUT
-          echo "BIN_PATH=${BIN_PATH}" >> $GITHUB_OUTPUT
+          # Setup output paths for upload
+          echo "MATPLOTLIB_NAME=${MATPLOTLIB_NAME}" >> $GITHUB_OUTPUT
+          echo "MATPLOTLIB_PATH=${MATPLOTLIB_PATH}" >> $GITHUB_OUTPUT
+          echo "MINESWEEPER_NAME=${MINESWEEPER_NAME}" >> $GITHUB_OUTPUT
+          echo "MINESWEEPER_PATH=${MINESWEEPER_PATH}" >> $GITHUB_OUTPUT
 
-      - name: Artifact upload
-        uses: actions/upload-artifact@master
+      - name: Upload matplotlib
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build.outputs.BIN_NAME }}
-          path: ${{ steps.build.outputs.BIN_PATH }}
+          name: ${{ steps.build.outputs.MATPLOTLIB_NAME }}
+          path: ${{ steps.build.outputs.MATPLOTLIB_PATH }}
+
+      - name: Upload minesweeper
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.MINESWEEPER_NAME }}
+          path: ${{ steps.build.outputs.MINESWEEPER_PATH }}
 
       - name: Publish packages
         uses: softprops/action-gh-release@v1
@@ -96,6 +110,6 @@ jobs:
         with:
           draft: true
           files: |
-            ${{ steps.build.outputs.BIN_PATH }}
+            ${{ steps.build.outputs.MINESWEEPER_PATH }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
