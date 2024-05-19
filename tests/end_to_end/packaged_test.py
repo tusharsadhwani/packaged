@@ -84,6 +84,6 @@ def test_console_scripts() -> None:
         package_path,
         executable_path,
         "pip install zxpy",
-        "zxpy script.zxpy",
+        "./script.zxpy",
     ):
-        assert "hi" in get_output(executable_path)
+        assert "hello world!" in get_output(executable_path)

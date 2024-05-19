@@ -96,9 +96,11 @@ def create_package(
                 if first_two_bytes != b"#!":
                     continue
 
+                print(f"{shebang_command = }")
                 shebang_command = file.readline()
                 rest_of_file = file.read()
 
+            print(f"{packaged_python_path = }")
             if not shebang_command.startswith(packaged_python_path.encode()):
                 continue
 
