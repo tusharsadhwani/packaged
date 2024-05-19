@@ -74,3 +74,16 @@ def test_config_parsing() -> None:
         config.startup_command,
     ):
         assert "('R', 'G', 'B')\n('C', 'M', 'Y', 'K')" in get_output(config.output_path)
+
+
+def test_console_scripts() -> None:
+    """Packages `configtest` to ensure config parsing works as expected."""
+    package_path = os.path.join(TEST_PACKAGES, "console_script_test")
+    executable_path = "./zxpy.bin"
+    with build_package(
+        package_path,
+        executable_path,
+        "pip install zxpy",
+        "./script.zxpy",
+    ):
+        assert "hello world!" in get_output(executable_path)

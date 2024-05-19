@@ -86,6 +86,17 @@ packaged ./aliens 'pip install pygame' 'python -m pygame.examples.aliens'
 
 Another one that you can try out is `pygame.examples.chimp`.
 
+### IPython (console scripts)
+
+Packages that expose shell scripts (like `ipython`) should also just work when
+creating a package, and these scripts can be used as the startup command:
+
+```bash
+packaged ./ipython 'pip install ipython' 'ipython'
+```
+
+Now running `./ipython` runs a portable version of IPython!
+
 ## Local Development / Testing
 
 To test and modify the package locally:
