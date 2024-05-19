@@ -132,6 +132,9 @@ jobs:
         with:
           draft: true
           files: |
+            ${{ steps.build.outputs.ALIENS_PATH }}
+            ${{ steps.build.outputs.TEXTUAL_PATH }}
+            ${{ steps.build.outputs.IPYTHON_PATH }}
             ${{ steps.build.outputs.MANDELBROT_PATH }}
             ${{ steps.build.outputs.MINESWEEPER_PATH }}
         env:
