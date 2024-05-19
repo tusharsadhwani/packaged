@@ -12,6 +12,7 @@ import yen.github
 
 MAKESELF_PATH = os.path.join(os.path.dirname(__file__), "makeself.sh")
 DEFAULT_PYTHON_VERSION = "3.12"
+PACKAGED_PYTHON_FOLDER_NAME = ".packaged_python"
 
 
 class SourceDirectoryNotFound(Exception):
@@ -47,7 +48,7 @@ def create_package(
     startup_script_name = "_packaged_startup.sh"
     startup_script_path = os.path.join(source_directory, startup_script_name)
 
-    packaged_python_path = os.path.join(source_directory, ".packaged_python")
+    packaged_python_path = os.path.join(source_directory, PACKAGED_PYTHON_FOLDER_NAME)
     if os.path.exists(packaged_python_path):
         shutil.rmtree(packaged_python_path)
 
@@ -102,16 +103,27 @@ def create_package(
                 rest_of_file = file.read()
 
             # Case 1: shebang points to packaged python
-            if shebang_command.startswith(packaged_python_path.encode()):
+            # File looks like this:
+            # #!/path/to/.packaged_python/python/bin/python3.12
+            # ... rest of python code
+            if PACKAGED_PYTHON_FOLDER_NAME.encode() in shebang_command:
                 # rewrite this file to have a `env python` shebang
                 with open(filepath, "wb") as file:
                     file.write(b"#!/usr/bin/env python\n")
                     file.write(first_line)
                     file.write(second_line)
                     file.write(rest_of_file)
-            # Case 2: shebang is bin/sh, but the script is an `exec`
-            # with the shebang to packaged python
-            elif first_line.startswith(b"'''exec' " + packaged_python_path.encode()):
+            # Case 2: shebang is /bin/sh, but the script is an `exec`
+            # with the shebang to packaged python.
+            # File looks like this:
+            # #!/bin/sh
+            # '''exec' /path/to/.packaged_python/python/bin/python3.12 "$0" "$@"
+            # ' '''
+            # ... rest of python code
+            elif (
+                first_line.startswith(b"'''exec' ")
+                and PACKAGED_PYTHON_FOLDER_NAME.encode() in first_line
+            ):
                 # rewrite this file to have a `env python` shebang,
                 # and get rid of the first two lines as they're not needed
                 assert second_line == b"' '''\n"
