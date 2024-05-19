@@ -47,11 +47,11 @@ jobs:
               target: aarch64-apple-darwin,
               os: macOS-latest,
             }
-          - {
-              name: "windows-x86_64",
-              target: x86_64-pc-windows-msvc,
-              os: windows-latest,
-            }
+          # - {
+          #     name: "windows-x86_64",
+          #     target: x86_64-pc-windows-msvc,
+          #     os: windows-latest,
+          #   }
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
