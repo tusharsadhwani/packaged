@@ -5,10 +5,11 @@ from __future__ import annotations
 import os.path
 import shutil
 import subprocess
+import sys
 import tempfile
 
 import yen.github
-
+from yaspin import yaspin
 
 MAKESELF_PATH = os.path.join(os.path.dirname(__file__), "makeself.sh")
 DEFAULT_PYTHON_VERSION = "3.12"
@@ -69,14 +70,27 @@ def create_package(
 
         # Run the build command in the source directory, while making sure
         # that `python` and related binaries point to the installed python
-        subprocess.check_call(
-            [build_command],
-            shell=True,
-            env={
-                "PATH": os.pathsep.join([python_bin_folder, os.environ.get("PATH", "")])
-            },
-            cwd=source_directory,
-        )
+        spinner = yaspin(text="Running the build command...")
+        spinner.start()
+        try:
+            subprocess.run(
+                [build_command],
+                shell=True,
+                env={
+                    "PATH": os.pathsep.join(
+                        [python_bin_folder, os.environ.get("PATH", "")]
+                    )
+                },
+                cwd=source_directory,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+        except subprocess.CalledProcessError as exc:
+            spinner.stop()
+            print("*** Build Failed:", file=sys.stderr)
+            print("Stdout:\n" + exc.stdout.decode(errors="ignore"), file=sys.stderr)
+            print("Stderr:\n" + exc.stdout.decode(errors="ignore"), file=sys.stderr)
+            raise
 
         # The startup script is simply the startup command, prepended with a PATH
         # change to ensure that `python` refers to the bundled python.
@@ -87,6 +101,7 @@ def create_package(
         os.chmod(startup_script_path, 0o777)
 
         # Patch console scripts, replacing the shebang with /usr/bin/env
+        spinner.text = "Patching console scripts..."
         for filename in os.listdir(python_bin_folder):
             filepath = os.path.join(python_bin_folder, filename)
             if not os.path.isfile(filepath):
@@ -135,21 +150,34 @@ def create_package(
                 continue
 
         # This uses `makeself` to build the binary
-        subprocess.check_call(
-            [
-                MAKESELF_PATH,
-                # Path to package
-                source_directory,
-                # Filename to output
-                output_path,
-                # Label for the package, for now it's just the filename
-                output_path,
-                # The command to run when starting the package.
-                # `makeself` wants the startup script path to be a relative path
-                os.path.join(".", startup_script_name),
-            ],
-        )
+        spinner.text = "Building your package..."
+        try:
+            subprocess.run(
+                [
+                    MAKESELF_PATH,
+                    # Path to package
+                    source_directory,
+                    # Filename to output
+                    output_path,
+                    # Label for the package, for now it's just the filename
+                    output_path,
+                    # The command to run when starting the package.
+                    # `makeself` wants the startup script path to be a relative path
+                    os.path.join(".", startup_script_name),
+                ],
+                check=True,
+                capture_output=True,
+            )
+        except subprocess.CalledProcessError as exc:
+            spinner.stop()
+            print("*** Makeself Failed:", file=sys.stderr)
+            print("Stdout:\n" + exc.stdout.decode(errors="ignore"), file=sys.stderr)
+            print("Stderr:\n" + exc.stdout.decode(errors="ignore"), file=sys.stderr)
+            raise
+
     finally:
+        spinner.stop()
+        print(f"Package {output_path!r} built successfully!")
         # Cleanup the packaged python and startup script from source directory
         if os.path.exists(startup_script_path):
             os.remove(startup_script_path)
