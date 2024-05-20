@@ -70,7 +70,7 @@ def create_package(
 
         # Run the build command in the source directory, while making sure
         # that `python` and related binaries point to the installed python
-        spinner = yaspin(text="Building your project...")
+        spinner = yaspin(text="Running the build command...")
         spinner.start()
         try:
             subprocess.run(
@@ -150,7 +150,7 @@ def create_package(
                 continue
 
         # This uses `makeself` to build the binary
-        spinner.text = "Building package..."
+        spinner.text = "Building your package..."
         try:
             subprocess.run(
                 [
