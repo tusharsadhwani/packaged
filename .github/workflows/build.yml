@@ -47,7 +47,7 @@ jobs:
           echo "IS_RELEASE=${IS_RELEASE}" >> $GITHUB_OUTPUT
 
       - uses: uraimo/run-on-arch-action@v2
-        if: ${{ matrix.name }} == "Linux-aarch64"
+        if: matrix.name == "Linux-aarch64"
         name: Setup qemu to build for unavailable platform
         id: runcmd
         with:
