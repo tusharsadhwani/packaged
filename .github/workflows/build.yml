@@ -27,7 +27,7 @@ jobs:
           - { name: "Linux-x86_64", target: x86_64-linux, os: ubuntu-20.04 }
           # No arm linux OS available on github actions.
           # Find another way.
-          # - { name: "Linux-aarch64", target: aarch64-linux, os: ubuntu-latest }
+          - { name: "Linux-aarch64", target: aarch64-linux, os: ubuntu-20.04 }
           - { name: "macOS-x86_64", target: x86_64-darwin, os: macOS-13 }
           - { name: "macOS-aarch64", target: aarch64-darwin, os: macOS-14 }
           # - {
@@ -45,6 +45,17 @@ jobs:
         run: |
           unset IS_RELEASE ; if [[ $GITHUB_REF =~ ^refs/tags/v[0-9].* ]]; then IS_RELEASE='true' ; fi
           echo "IS_RELEASE=${IS_RELEASE}" >> $GITHUB_OUTPUT
+
+      - uses: uraimo/run-on-arch-action@v2
+        if: ${{ matrix.name }} == "Linux-aarch64"
+        name: Setup qemu to build for unavailable platform
+        id: runcmd
+        with:
+          arch: aarch64
+          distro: ${{ matrix.os }}
+          # Not required, but speeds up builds by storing container images in
+          # a GitHub package registry.
+          githubToken: ${{ github.token }}
 
       - uses: actions/setup-python@v5
         with:
