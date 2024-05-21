@@ -92,8 +92,8 @@ def create_package(
                     )
                 },
                 cwd=source_directory,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                check=True,
+                capture_output=True,
             )
         except subprocess.CalledProcessError as exc:
             spinner.stop()
