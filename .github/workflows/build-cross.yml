@@ -45,10 +45,6 @@ jobs:
           # Not required, but speeds up builds by storing container images in
           # a GitHub package registry.
           githubToken: ${{ github.token }}
-          # workaround for $GITHUB_OUTPUT not available in run-on-arch:
-          # https://github.com/uraimo/run-on-arch-action/issues/52
-          dockerRunArgs: |
-            --volume /home/runner/work/_temp:/home/runner/work/_temp
           run: |
             apt update
             apt install python3-pip -y
@@ -91,8 +87,6 @@ jobs:
             echo ::set-output name=MANDELBROT_PATH::"${MANDELBROT_PATH}"
             echo ::set-output name=MINESWEEPER_NAME::"${MINESWEEPER_NAME}"
             echo ::set-output name=MINESWEEPER_PATH::"${MINESWEEPER_PATH}"
-
-      - run: echo github output is $GITHUB_OUTPUT
 
       - name: Upload aliens
         uses: actions/upload-artifact@v4
