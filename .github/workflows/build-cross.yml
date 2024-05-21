@@ -77,6 +77,7 @@ jobs:
             mv ./minesweeper.bin $MINESWEEPER_NAME
 
             # Setup output paths for upload
+            echo Setting paths in output
             echo ::set-output name=ALIENS_NAME::"${ALIENS_NAME}"
             echo ::set-output name=ALIENS_PATH::"${ALIENS_PATH}"
             echo ::set-output name=TEXTUAL_NAME::"${TEXTUAL_NAME}"
