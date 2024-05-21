@@ -1,4 +1,4 @@
-name: Build binaries for all platforms
+name: Build binaries for platforms under QEMU
 
 on:
   push:
@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-cross:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
