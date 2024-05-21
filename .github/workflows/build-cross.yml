@@ -36,24 +36,19 @@ jobs:
           unset IS_RELEASE ; if [[ $GITHUB_REF =~ ^refs/tags/v[0-9].* ]]; then IS_RELEASE='true' ; fi
           echo "IS_RELEASE=${IS_RELEASE}" >> $GITHUB_OUTPUT
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install packaged
-        run: |
-          pip install .
-
       - uses: uraimo/run-on-arch-action@v2
         name: Build binary under QEMU
         id: build
         with:
           arch: aarch64
-          distro: ubuntu20.04
+          distro: ubuntu22.04
           # Not required, but speeds up builds by storing container images in
           # a GitHub package registry.
           githubToken: ${{ github.token }}
           run: |
+            apt install python3
+            pip install .
+
             # aliens: requires no source
             ALIENS_NAME="aliens-${{ matrix.target }}.bin"
             ALIENS_PATH=${PWD}/${ALIENS_NAME}
