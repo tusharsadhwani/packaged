@@ -2,6 +2,8 @@
 
 The easiest way to ship python applications.
 
+### Demo apps available on the website: [packaged.live](https://packaged.live)
+
 ![Demo](https://raw.githubusercontent.com/tusharsadhwani/packaged/main/demo.jpg)
 
 `packaged` can take any Python project, and package it into a self contained
@@ -31,8 +33,7 @@ All examples below create a self contained executable. You can send the produced
 binary file to another machine with the same OS and architecture, and it will
 run the same.
 
-You can also download pre-built binaries for these packages from the
-[Releases page](https://github.com/tusharsadhwani/packaged/releases/latest).
+You can also find the pre-built binaries on the [Releases page](https://github.com/tusharsadhwani/packaged/releases/latest).
 
 ### Mandelbrot (`numpy`, `matplotlib`, GUI)
 
