@@ -47,7 +47,7 @@ jobs:
           githubToken: ${{ github.token }}
           run: |
             apt update
-            apt install python3
+            apt install python3 -y
             pip install .
 
             # aliens: requires no source
