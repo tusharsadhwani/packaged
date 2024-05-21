@@ -18,6 +18,7 @@ def test_cli() -> None:
         "pip install foo",
         "python -m foo",
         packaged.DEFAULT_PYTHON_VERSION,
+        False,
     )
 
     with mock.patch.object(packaged.cli, "create_package") as mocked:
@@ -26,7 +27,9 @@ def test_cli() -> None:
         )
 
     # specified python version
-    mocked.assert_called_with(None, "./baz", "pip install baz", "python -m baz", "3.10")
+    mocked.assert_called_with(
+        None, "./baz", "pip install baz", "python -m baz", "3.10", False
+    )
 
     with mock.patch.object(packaged.cli, "create_package") as mocked:
         packaged.cli.cli(
@@ -45,6 +48,23 @@ def test_cli() -> None:
         "pip install -rrequirements.txt",
         "python src/mypackage/cli.py",
         packaged.DEFAULT_PYTHON_VERSION,
+        False,
     )
     args = mocked.call_args[0]
     assert args[0].endswith("/mypackage")
+
+    # Test --quiet
+    with mock.patch.object(packaged.cli, "create_package") as mocked:
+        packaged.cli.cli(
+            ["./some", "pip install some", "python some.py", "./some.bin", "--quiet"]
+        )
+
+    # quiet is True
+    mocked.assert_called_with(
+        mock.ANY,
+        "./some",
+        "pip install some",
+        "python some.py",
+        packaged.DEFAULT_PYTHON_VERSION,
+        True,
+    )

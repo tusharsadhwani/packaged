@@ -61,27 +61,27 @@ jobs:
           # aliens: requires no source
           ALIENS_NAME="aliens-${{ matrix.target }}.bin"
           ALIENS_PATH=${PWD}/${ALIENS_NAME}
-          packaged $ALIENS_NAME 'pip install pygame' 'python -m pygame.examples.aliens' --quiet
+          packaged $ALIENS_NAME 'pip install pygame' 'python -m pygame.examples.aliens'
 
           # textual: requires no source
           TEXTUAL_NAME="textual-${{ matrix.target }}.bin"
           TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
-          packaged $TEXTUAL_NAME 'pip install textual' 'python -m textual' --quiet
+          packaged $TEXTUAL_NAME 'pip install textual' 'python -m textual'
 
           # IPython: requires no source
           IPYTHON_NAME="ipython-${{ matrix.target }}.bin"
           IPYTHON_PATH=${PWD}/${IPYTHON_NAME}
-          packaged $IPYTHON_NAME 'pip install ipython' 'ipython' --quiet
+          packaged $IPYTHON_NAME 'pip install ipython' 'ipython'
 
           # ./examples/mandelbrot
           MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.bin"
           MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
-          packaged $MANDELBROT_NAME 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot --quiet
+          packaged $MANDELBROT_NAME 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
 
           # ./examples/minesweeper
           MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.bin"
           MINESWEEPER_PATH=${PWD}/${MINESWEEPER_NAME}
-          packaged ./example/minesweeper --quiet
+          packaged ./example/minesweeper
           mv ./minesweeper.bin $MINESWEEPER_NAME
 
           # Setup output paths for upload
