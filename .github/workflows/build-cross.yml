@@ -81,6 +81,7 @@ jobs:
             # mv ./minesweeper.bin $MINESWEEPER_NAME
 
             # Setup output paths for upload
+            GITHUB_OUTPUT=""
             echo "ALIENS_NAME=${ALIENS_NAME}" >> $GITHUB_OUTPUT
             echo "ALIENS_PATH=${ALIENS_PATH}" >> $GITHUB_OUTPUT
             # echo "TEXTUAL_NAME=${TEXTUAL_NAME}" >> $GITHUB_OUTPUT
@@ -91,6 +92,8 @@ jobs:
             # echo "MANDELBROT_PATH=${MANDELBROT_PATH}" >> $GITHUB_OUTPUT
             # echo "MINESWEEPER_NAME=${MINESWEEPER_NAME}" >> $GITHUB_OUTPUT
             # echo "MINESWEEPER_PATH=${MINESWEEPER_PATH}" >> $GITHUB_OUTPUT
+
+      - run: echo github output is $GITHUB_OUTPUT
 
       - name: Upload aliens
         uses: actions/upload-artifact@v4
