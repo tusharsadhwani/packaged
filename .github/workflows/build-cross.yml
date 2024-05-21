@@ -24,14 +24,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { name: "Linux-x86_64", target: x86_64-linux, os: ubuntu-20.04 }
-          - { name: "macOS-x86_64", target: x86_64-darwin, os: macOS-13 }
-          - { name: "macOS-aarch64", target: aarch64-darwin, os: macOS-14 }
-          # - {
-          #     name: "windows-x86_64",
-          #     target: x86_64-windows,
-          #     os: windows-latest,
-          #   }
+          - { name: "Linux-aarch64", target: aarch64-linux, os: ubuntu-20.04 }
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
@@ -51,47 +44,53 @@ jobs:
         run: |
           pip install .
 
-      - name: Build binary
+      - uses: uraimo/run-on-arch-action@v2
+        name: Build binary under QEMU
         id: build
-        shell: bash
-        run: |
-          # aliens: requires no source
-          ALIENS_NAME="aliens-${{ matrix.target }}.bin"
-          ALIENS_PATH=${PWD}/${ALIENS_NAME}
-          packaged $ALIENS_NAME 'pip install pygame' 'python -m pygame.examples.aliens'
+        with:
+          arch: aarch64
+          distro: ubuntu20.04
+          # Not required, but speeds up builds by storing container images in
+          # a GitHub package registry.
+          githubToken: ${{ github.token }}
+          run: |
+            # aliens: requires no source
+            ALIENS_NAME="aliens-${{ matrix.target }}.bin"
+            ALIENS_PATH=${PWD}/${ALIENS_NAME}
+            packaged $ALIENS_NAME 'pip install pygame' 'python -m pygame.examples.aliens'
 
-          # textual: requires no source
-          TEXTUAL_NAME="textual-${{ matrix.target }}.bin"
-          TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
-          packaged $TEXTUAL_NAME 'pip install pygame' 'python -m textual'
+            # textual: requires no source
+            TEXTUAL_NAME="textual-${{ matrix.target }}.bin"
+            TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
+            packaged $TEXTUAL_NAME 'pip install pygame' 'python -m textual'
 
-          # IPython: requires no source
-          IPYTHON_NAME="ipython-${{ matrix.target }}.bin"
-          IPYTHON_PATH=${PWD}/${IPYTHON_NAME}
-          packaged $IPYTHON_NAME 'pip install ipython' 'ipython'
+            # IPython: requires no source
+            IPYTHON_NAME="ipython-${{ matrix.target }}.bin"
+            IPYTHON_PATH=${PWD}/${IPYTHON_NAME}
+            packaged $IPYTHON_NAME 'pip install ipython' 'ipython'
 
-          # ./examples/mandelbrot
-          MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.bin"
-          MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
-          packaged $MANDELBROT_NAME 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
+            # ./examples/mandelbrot
+            MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.bin"
+            MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
+            packaged $MANDELBROT_NAME 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
 
-          # ./examples/minesweeper
-          MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.bin"
-          MINESWEEPER_PATH=${PWD}/${MINESWEEPER_NAME}
-          packaged ./example/minesweeper
-          mv ./minesweeper.bin $MINESWEEPER_NAME
+            # ./examples/minesweeper
+            MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.bin"
+            MINESWEEPER_PATH=${PWD}/${MINESWEEPER_NAME}
+            packaged ./example/minesweeper
+            mv ./minesweeper.bin $MINESWEEPER_NAME
 
-          # Setup output paths for upload
-          echo "ALIENS_NAME=${ALIENS_NAME}" >> $GITHUB_OUTPUT
-          echo "ALIENS_PATH=${ALIENS_PATH}" >> $GITHUB_OUTPUT
-          echo "TEXTUAL_NAME=${TEXTUAL_NAME}" >> $GITHUB_OUTPUT
-          echo "TEXTUAL_PATH=${TEXTUAL_PATH}" >> $GITHUB_OUTPUT
-          echo "IPYTHON_NAME=${IPYTHON_NAME}" >> $GITHUB_OUTPUT
-          echo "IPYTHON_PATH=${IPYTHON_PATH}" >> $GITHUB_OUTPUT
-          echo "MANDELBROT_NAME=${MANDELBROT_NAME}" >> $GITHUB_OUTPUT
-          echo "MANDELBROT_PATH=${MANDELBROT_PATH}" >> $GITHUB_OUTPUT
-          echo "MINESWEEPER_NAME=${MINESWEEPER_NAME}" >> $GITHUB_OUTPUT
-          echo "MINESWEEPER_PATH=${MINESWEEPER_PATH}" >> $GITHUB_OUTPUT
+            # Setup output paths for upload
+            echo "ALIENS_NAME=${ALIENS_NAME}" >> $GITHUB_OUTPUT
+            echo "ALIENS_PATH=${ALIENS_PATH}" >> $GITHUB_OUTPUT
+            echo "TEXTUAL_NAME=${TEXTUAL_NAME}" >> $GITHUB_OUTPUT
+            echo "TEXTUAL_PATH=${TEXTUAL_PATH}" >> $GITHUB_OUTPUT
+            echo "IPYTHON_NAME=${IPYTHON_NAME}" >> $GITHUB_OUTPUT
+            echo "IPYTHON_PATH=${IPYTHON_PATH}" >> $GITHUB_OUTPUT
+            echo "MANDELBROT_NAME=${MANDELBROT_NAME}" >> $GITHUB_OUTPUT
+            echo "MANDELBROT_PATH=${MANDELBROT_PATH}" >> $GITHUB_OUTPUT
+            echo "MINESWEEPER_NAME=${MINESWEEPER_NAME}" >> $GITHUB_OUTPUT
+            echo "MINESWEEPER_PATH=${MINESWEEPER_PATH}" >> $GITHUB_OUTPUT
 
       - name: Upload aliens
         uses: actions/upload-artifact@v4
