@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from unittest import mock
 
 import yen.github
 from yaspin import yaspin
@@ -38,6 +39,7 @@ def create_package(
     build_command: str,
     startup_command: str,
     python_version: str,
+    quiet: bool = False,
 ) -> None:
     """Create the makeself executable, with the startup script in it."""
     if source_directory is None:
@@ -70,7 +72,11 @@ def create_package(
 
         # Run the build command in the source directory, while making sure
         # that `python` and related binaries point to the installed python
-        spinner = yaspin(text="Running the build command...")
+        if quiet:
+            spinner = mock.Mock()
+        else:
+            spinner = yaspin(text="Running the build command...")
+
         spinner.start()
         try:
             subprocess.run(
@@ -177,7 +183,9 @@ def create_package(
 
     finally:
         spinner.stop()
-        print(f"Package {output_path!r} built successfully!")
+        if not quiet:
+            print(f"Package {output_path!r} built successfully!")
+
         # Cleanup the packaged python and startup script from source directory
         if os.path.exists(startup_script_path):
             os.remove(startup_script_path)

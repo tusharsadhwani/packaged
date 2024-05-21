@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 import argparse
-import dataclasses
 import os.path
 import platform
 import sys
-import typing
 
 from packaged import (
     DEFAULT_PYTHON_VERSION,
@@ -69,6 +67,11 @@ def cli(argv: list[str] | None = None) -> int:
             help="Version of Python to package your project with.",
             default=DEFAULT_PYTHON_VERSION,
         )
+        parser.add_argument(
+            "--quiet",
+            help="Disable all output",
+            action="store_true",
+        )
         args = parser.parse_args(argv)
         config = Config(**vars(args))
 
@@ -79,6 +82,7 @@ def cli(argv: list[str] | None = None) -> int:
             config.build_command,
             config.startup_command,
             config.python_version,
+            config.quiet,
         )
     except SourceDirectoryNotFound as exc:
         error(f"Folder {exc.directory_path!r} does not exist.")

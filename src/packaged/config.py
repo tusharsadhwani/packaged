@@ -25,6 +25,7 @@ class Config:
     build_command: str
     startup_command: str
     python_version: str
+    quiet: bool
 
 
 CONFIG_NAME = "./packaged.toml"
