@@ -70,7 +70,8 @@ def cli(argv: list[str] | None = None) -> int:
         parser.add_argument(
             "--quiet",
             help="Disable all output",
-            action="store_false" if "CI" in os.environ else "store_true",
+            action="store_true",
+            default="CI" in os.environ,
         )
         args = parser.parse_args(argv)
         config = Config(**vars(args))

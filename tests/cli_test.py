@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import os
 from unittest import mock
+
+from pytest import MonkeyPatch
 
 import packaged
 import packaged.cli
 
 
-def test_cli() -> None:
+def test_cli(monkeypatch: MonkeyPatch) -> None:
     """Ensures that CLI passes args to `create_package()` properly."""
     with mock.patch.object(packaged.cli, "create_package") as mocked:
         packaged.cli.cli(["./foo", "pip install foo", "python -m foo"])
@@ -54,6 +57,36 @@ def test_cli() -> None:
     assert args[0].endswith("/mypackage")
 
     # Test --quiet
+    with mock.patch.object(packaged.cli, "create_package") as mocked:
+        packaged.cli.cli(
+            ["./some", "pip install some", "python some.py", "./some.bin", "--quiet"]
+        )
+
+    # quiet is True
+    mocked.assert_called_with(
+        mock.ANY,
+        "./some",
+        "pip install some",
+        "python some.py",
+        packaged.DEFAULT_PYTHON_VERSION,
+        True,
+    )
+
+    # Test --quiet when CI is true, regardless of if the flag is passed
+    monkeypatch.setattr(os, "environ", {"CI": "1"})
+    with mock.patch.object(packaged.cli, "create_package") as mocked:
+        packaged.cli.cli(["./some", "pip install some", "python some.py", "./some.bin"])
+
+    # quiet is True
+    mocked.assert_called_with(
+        mock.ANY,
+        "./some",
+        "pip install some",
+        "python some.py",
+        packaged.DEFAULT_PYTHON_VERSION,
+        True,
+    )
+    monkeypatch.setattr(os, "environ", {"CI": "1"})
     with mock.patch.object(packaged.cli, "create_package") as mocked:
         packaged.cli.cli(
             ["./some", "pip install some", "python some.py", "./some.bin", "--quiet"]
