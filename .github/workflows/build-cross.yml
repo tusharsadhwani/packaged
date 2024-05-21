@@ -59,39 +59,38 @@ jobs:
             ALIENS_PATH=${PWD}/${ALIENS_NAME}
             # packaged $ALIENS_NAME 'pip install pygame' 'python -m pygame.examples.aliens'
 
-            # # textual: requires no source
-            # TEXTUAL_NAME="textual-${{ matrix.target }}.bin"
-            # TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
-            # packaged $TEXTUAL_NAME 'pip install pygame' 'python -m textual'
+            # textual: requires no source
+            TEXTUAL_NAME="textual-${{ matrix.target }}.bin"
+            TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
+            packaged $TEXTUAL_NAME 'pip install pygame' 'python -m textual'
 
-            # # IPython: requires no source
-            # IPYTHON_NAME="ipython-${{ matrix.target }}.bin"
-            # IPYTHON_PATH=${PWD}/${IPYTHON_NAME}
-            # packaged $IPYTHON_NAME 'pip install ipython' 'ipython'
+            # IPython: requires no source
+            IPYTHON_NAME="ipython-${{ matrix.target }}.bin"
+            IPYTHON_PATH=${PWD}/${IPYTHON_NAME}
+            packaged $IPYTHON_NAME 'pip install ipython' 'ipython'
 
-            # # ./examples/mandelbrot
-            # MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.bin"
-            # MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
-            # packaged $MANDELBROT_NAME 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
+            # ./examples/mandelbrot
+            MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.bin"
+            MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
+            packaged $MANDELBROT_NAME 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
 
-            # # ./examples/minesweeper
-            # MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.bin"
-            # MINESWEEPER_PATH=${PWD}/${MINESWEEPER_NAME}
-            # packaged ./example/minesweeper
-            # mv ./minesweeper.bin $MINESWEEPER_NAME
+            # ./examples/minesweeper
+            MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.bin"
+            MINESWEEPER_PATH=${PWD}/${MINESWEEPER_NAME}
+            packaged ./example/minesweeper
+            mv ./minesweeper.bin $MINESWEEPER_NAME
 
             # Setup output paths for upload
-            GITHUB_OUTPUT=""
-            echo "ALIENS_NAME=${ALIENS_NAME}" >> "${GITHUB_OUTPUT}"
-            echo "ALIENS_PATH=${ALIENS_PATH}" >> "${GITHUB_OUTPUT}"
-            # echo "TEXTUAL_NAME=${TEXTUAL_NAME}" >> $GITHUB_OUTPUT
-            # echo "TEXTUAL_PATH=${TEXTUAL_PATH}" >> $GITHUB_OUTPUT
-            # echo "IPYTHON_NAME=${IPYTHON_NAME}" >> $GITHUB_OUTPUT
-            # echo "IPYTHON_PATH=${IPYTHON_PATH}" >> $GITHUB_OUTPUT
-            # echo "MANDELBROT_NAME=${MANDELBROT_NAME}" >> $GITHUB_OUTPUT
-            # echo "MANDELBROT_PATH=${MANDELBROT_PATH}" >> $GITHUB_OUTPUT
-            # echo "MINESWEEPER_NAME=${MINESWEEPER_NAME}" >> $GITHUB_OUTPUT
-            # echo "MINESWEEPER_PATH=${MINESWEEPER_PATH}" >> $GITHUB_OUTPUT
+            echo ::set-output name=ALIENS_NAME::"${ALIENS_NAME}"
+            echo ::set-output name=ALIENS_PATH::"${ALIENS_PATH}"
+            echo ::set-output name=TEXTUAL_NAME::"${TEXTUAL_NAME}"
+            echo ::set-output name=TEXTUAL_PATH::"${TEXTUAL_PATH}"
+            echo ::set-output name=IPYTHON_NAME::"${IPYTHON_NAME}"
+            echo ::set-output name=IPYTHON_PATH::"${IPYTHON_PATH}"
+            echo ::set-output name=MANDELBROT_NAME::"${MANDELBROT_NAME}"
+            echo ::set-output name=MANDELBROT_PATH::"${MANDELBROT_PATH}"
+            echo ::set-output name=MINESWEEPER_NAME::"${MINESWEEPER_NAME}"
+            echo ::set-output name=MINESWEEPER_PATH::"${MINESWEEPER_PATH}"
 
       - run: echo github output is $GITHUB_OUTPUT
 
@@ -101,29 +100,29 @@ jobs:
           name: ${{ steps.build.outputs.ALIENS_NAME }}
           path: ${{ steps.build.outputs.ALIENS_PATH }}
 
-      # - name: Upload textual
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ steps.build.outputs.TEXTUAL_NAME }}
-      #     path: ${{ steps.build.outputs.TEXTUAL_PATH }}
+      - name: Upload textual
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.TEXTUAL_NAME }}
+          path: ${{ steps.build.outputs.TEXTUAL_PATH }}
 
-      # - name: Upload IPython
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ steps.build.outputs.IPYTHON_NAME }}
-      #     path: ${{ steps.build.outputs.IPYTHON_PATH }}
+      - name: Upload IPython
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.IPYTHON_NAME }}
+          path: ${{ steps.build.outputs.IPYTHON_PATH }}
 
-      # - name: Upload mandelbrot
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ steps.build.outputs.MANDELBROT_NAME }}
-      #     path: ${{ steps.build.outputs.MANDELBROT_PATH }}
+      - name: Upload mandelbrot
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.MANDELBROT_NAME }}
+          path: ${{ steps.build.outputs.MANDELBROT_PATH }}
 
-      # - name: Upload minesweeper
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ steps.build.outputs.MINESWEEPER_NAME }}
-      #     path: ${{ steps.build.outputs.MINESWEEPER_PATH }}
+      - name: Upload minesweeper
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.MINESWEEPER_NAME }}
+          path: ${{ steps.build.outputs.MINESWEEPER_PATH }}
 
       - name: Publish packages
         uses: softprops/action-gh-release@v1
