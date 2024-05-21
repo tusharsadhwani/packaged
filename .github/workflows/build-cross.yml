@@ -57,7 +57,7 @@ jobs:
             # aliens: requires no source
             ALIENS_NAME="aliens-${{ matrix.target }}.bin"
             ALIENS_PATH=${PWD}/${ALIENS_NAME}
-            packaged $ALIENS_NAME 'pip install pygame' 'python -m pygame.examples.aliens'
+            # packaged $ALIENS_NAME 'pip install pygame' 'python -m pygame.examples.aliens'
 
             # # textual: requires no source
             # TEXTUAL_NAME="textual-${{ matrix.target }}.bin"
