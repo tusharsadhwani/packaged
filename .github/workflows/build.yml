@@ -63,7 +63,7 @@ jobs:
           # textual: requires no source
           TEXTUAL_NAME="textual-${{ matrix.target }}.bin"
           TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
-          packaged $TEXTUAL_NAME 'pip install pygame' 'python -m textual'
+          packaged $TEXTUAL_NAME 'pip install textual' 'python -m textual'
 
           # IPython: requires no source
           IPYTHON_NAME="ipython-${{ matrix.target }}.bin"
