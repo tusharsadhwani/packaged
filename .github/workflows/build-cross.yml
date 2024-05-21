@@ -80,14 +80,14 @@ jobs:
             echo Setting paths in output
             echo ::set-output name=ALIENS_NAME::"${ALIENS_NAME}"
             echo ::set-output name=ALIENS_PATH::"${ALIENS_PATH}"
-            echo ::set-output name=TEXTUAL_NAME::"${TEXTUAL_NAME}"
-            echo ::set-output name=TEXTUAL_PATH::"${TEXTUAL_PATH}"
-            echo ::set-output name=IPYTHON_NAME::"${IPYTHON_NAME}"
-            echo ::set-output name=IPYTHON_PATH::"${IPYTHON_PATH}"
-            echo ::set-output name=MANDELBROT_NAME::"${MANDELBROT_NAME}"
-            echo ::set-output name=MANDELBROT_PATH::"${MANDELBROT_PATH}"
-            echo ::set-output name=MINESWEEPER_NAME::"${MINESWEEPER_NAME}"
-            echo ::set-output name=MINESWEEPER_PATH::"${MINESWEEPER_PATH}"
+            # echo ::set-output name=TEXTUAL_NAME::"${TEXTUAL_NAME}"
+            # echo ::set-output name=TEXTUAL_PATH::"${TEXTUAL_PATH}"
+            # echo ::set-output name=IPYTHON_NAME::"${IPYTHON_NAME}"
+            # echo ::set-output name=IPYTHON_PATH::"${IPYTHON_PATH}"
+            # echo ::set-output name=MANDELBROT_NAME::"${MANDELBROT_NAME}"
+            # echo ::set-output name=MANDELBROT_PATH::"${MANDELBROT_PATH}"
+            # echo ::set-output name=MINESWEEPER_NAME::"${MINESWEEPER_NAME}"
+            # echo ::set-output name=MINESWEEPER_PATH::"${MINESWEEPER_PATH}"
 
       - name: Upload aliens
         uses: actions/upload-artifact@v4
