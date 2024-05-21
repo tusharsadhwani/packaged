@@ -25,9 +25,6 @@ jobs:
       matrix:
         include:
           - { name: "Linux-x86_64", target: x86_64-linux, os: ubuntu-20.04 }
-          # No arm linux OS available on github actions.
-          # Find another way.
-          # - { name: "Linux-aarch64", target: aarch64-linux, os: ubuntu-latest }
           - { name: "macOS-x86_64", target: x86_64-darwin, os: macOS-13 }
           - { name: "macOS-aarch64", target: aarch64-darwin, os: macOS-14 }
           # - {
