@@ -82,8 +82,8 @@ jobs:
 
             # Setup output paths for upload
             GITHUB_OUTPUT=""
-            echo "ALIENS_NAME=${ALIENS_NAME}" >> $GITHUB_OUTPUT
-            echo "ALIENS_PATH=${ALIENS_PATH}" >> $GITHUB_OUTPUT
+            echo "ALIENS_NAME=${ALIENS_NAME}" >> "${GITHUB_OUTPUT}"
+            echo "ALIENS_PATH=${ALIENS_PATH}" >> "${GITHUB_OUTPUT}"
             # echo "TEXTUAL_NAME=${TEXTUAL_NAME}" >> $GITHUB_OUTPUT
             # echo "TEXTUAL_PATH=${TEXTUAL_PATH}" >> $GITHUB_OUTPUT
             # echo "IPYTHON_NAME=${IPYTHON_NAME}" >> $GITHUB_OUTPUT
