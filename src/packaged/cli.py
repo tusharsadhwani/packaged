@@ -9,6 +9,7 @@ import sys
 
 from packaged import (
     DEFAULT_PYTHON_VERSION,
+    OutputPathExists,
     PythonNotAvailable,
     SourceDirectoryNotFound,
     create_package,
@@ -23,7 +24,7 @@ from packaged.config import (
 
 def error(message: str) -> None:
     """Print error message"""
-    print(f"\033[1;31mError:\033[m {message}")
+    print(f"\033[1;31mError:\033[m {message}", file=sys.stderr)
 
 
 def cli(argv: list[str] | None = None) -> int:
@@ -91,5 +92,11 @@ def cli(argv: list[str] | None = None) -> int:
     except PythonNotAvailable as exc:
         error(f"Python {exc.python_version!r} is not available for download.")
         return 5
+    except OutputPathExists:
+        err_msg = f"output path {config.output_path!r} already exists"
+        if config.output_path == ".":
+            err_msg += "\nConsider giving a filename, like './myapp.bin'"
+        error(err_msg)
+        return 6
 
     return 0
