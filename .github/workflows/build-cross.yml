@@ -54,21 +54,25 @@ jobs:
             ALIENS_NAME="aliens-${{ matrix.target }}.tar.gz"
             ALIENS_PATH=${PWD}/${ALIENS_NAME}
             packaged ./aliens.bin 'pip install pygame' 'python -m pygame.examples.aliens'
+            tar czf ./aliens.bin $ALIENS_NAME
 
             # textual: requires no source
             TEXTUAL_NAME="textual-${{ matrix.target }}.tar.gz"
             TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
             packaged ./textual.bin 'pip install textual' 'python -m textual'
+            tar czf ./textual.bin $TEXTUAL_NAME
 
             # IPython: requires no source
             IPYTHON_NAME="ipython-${{ matrix.target }}.tar.gz"
             IPYTHON_PATH=${PWD}/${IPYTHON_NAME}
             packaged ./ipython.bin 'pip install ipython' 'ipython'
+            tar czf ./ipython.bin $IPYTHON_NAME
 
             # ./examples/mandelbrot
             MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.tar.gz"
             MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
             packaged ./mandelbrot.bin 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
+            tar czf ./mandelbrot.bin $MANDELBROT_NAME
 
             # ./examples/minesweeper
             MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.tar.gz"
