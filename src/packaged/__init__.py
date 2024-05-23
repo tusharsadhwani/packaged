@@ -185,11 +185,12 @@ def create_package(
             print("Stderr:\n" + exc.stdout.decode(errors="ignore"), file=sys.stderr)
             raise
 
-    finally:
         spinner.stop()
         if not quiet:
             print(f"Package {output_path!r} built successfully!")
 
+    finally:
+        spinner.stop()
         # Cleanup the packaged python and startup script from source directory
         if os.path.exists(startup_script_path):
             os.remove(startup_script_path)
