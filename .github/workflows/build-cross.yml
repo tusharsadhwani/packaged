@@ -53,32 +53,32 @@ jobs:
             # aliens: requires no source
             ALIENS_NAME="aliens-${{ matrix.target }}.tar.gz"
             ALIENS_PATH=${PWD}/${ALIENS_NAME}
-            packaged ./aliens.bin 'pip install pygame' 'python -m pygame.examples.aliens'
-            tar czf $ALIENS_NAME ./aliens.bin
+            packaged ./aliens.sh 'pip install pygame' 'python -m pygame.examples.aliens'
+            tar czf $ALIENS_NAME ./aliens.sh
 
             # textual: requires no source
             TEXTUAL_NAME="textual-${{ matrix.target }}.tar.gz"
             TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
-            packaged ./textual.bin 'pip install textual' 'python -m textual'
-            tar czf $TEXTUAL_NAME ./textual.bin
+            packaged ./textual.sh 'pip install textual' 'python -m textual'
+            tar czf $TEXTUAL_NAME ./textual.sh
 
             # IPython: requires no source
             IPYTHON_NAME="ipython-${{ matrix.target }}.tar.gz"
             IPYTHON_PATH=${PWD}/${IPYTHON_NAME}
-            packaged ./ipython.bin 'pip install ipython' 'ipython'
-            tar czf $IPYTHON_NAME ./ipython.bin
+            packaged ./ipython.sh 'pip install ipython' 'ipython'
+            tar czf $IPYTHON_NAME ./ipython.sh
 
             # ./examples/mandelbrot
             MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.tar.gz"
             MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
-            packaged ./mandelbrot.bin 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
-            tar czf $MANDELBROT_NAME ./mandelbrot.bin
+            packaged ./mandelbrot.sh 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
+            tar czf $MANDELBROT_NAME ./mandelbrot.sh
 
             # ./examples/minesweeper
             MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.tar.gz"
             MINESWEEPER_PATH=${PWD}/${MINESWEEPER_NAME}
             packaged ./example/minesweeper
-            tar czf $MINESWEEPER_NAME ./minesweeper.bin
+            tar czf $MINESWEEPER_NAME ./minesweeper.sh
 
             # Setup output paths for upload
             echo Setting paths in output
