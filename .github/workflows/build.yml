@@ -56,30 +56,30 @@ jobs:
         shell: bash
         run: |
           # aliens: requires no source
-          ALIENS_NAME="aliens-${{ matrix.target }}.bin"
+          ALIENS_NAME="aliens-${{ matrix.target }}.tar.gz"
           ALIENS_PATH=${PWD}/${ALIENS_NAME}
-          packaged $ALIENS_NAME 'pip install pygame' 'python -m pygame.examples.aliens'
+          packaged ./aliens.bin 'pip install pygame' 'python -m pygame.examples.aliens'
 
           # textual: requires no source
-          TEXTUAL_NAME="textual-${{ matrix.target }}.bin"
+          TEXTUAL_NAME="textual-${{ matrix.target }}.tar.gz"
           TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
-          packaged $TEXTUAL_NAME 'pip install textual' 'python -m textual'
+          packaged ./textual.bin 'pip install textual' 'python -m textual'
 
           # IPython: requires no source
-          IPYTHON_NAME="ipython-${{ matrix.target }}.bin"
+          IPYTHON_NAME="ipython-${{ matrix.target }}.tar.gz"
           IPYTHON_PATH=${PWD}/${IPYTHON_NAME}
-          packaged $IPYTHON_NAME 'pip install ipython' 'ipython'
+          packaged ./ipython.bin 'pip install ipython' 'ipython'
 
           # ./examples/mandelbrot
-          MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.bin"
+          MANDELBROT_NAME="mandelbrot-${{ matrix.target }}.tar.gz"
           MANDELBROT_PATH=${PWD}/${MANDELBROT_NAME}
-          packaged $MANDELBROT_NAME 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
+          packaged ./mandelbrot.bin 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
 
           # ./examples/minesweeper
-          MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.bin"
+          MINESWEEPER_NAME="minesweeper-${{ matrix.target }}.tar.gz"
           MINESWEEPER_PATH=${PWD}/${MINESWEEPER_NAME}
           packaged ./example/minesweeper
-          mv ./minesweeper.bin $MINESWEEPER_NAME
+          tar czf ./minesweeper.bin $MINESWEEPER_NAME
 
           # Setup output paths for upload
           echo "ALIENS_NAME=${ALIENS_NAME}" >> $GITHUB_OUTPUT
