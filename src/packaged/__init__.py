@@ -37,6 +37,10 @@ class PythonNotAvailable(Exception):
         self.python_version = python_version
 
 
+class OutputPathExists(Exception):
+    """Raised when the output path already exists."""
+
+
 def create_package(
     source_directory: str | None,
     output_path: str,
@@ -46,6 +50,9 @@ def create_package(
     quiet: bool = False,
 ) -> None:
     """Create the makeself executable, with the startup script in it."""
+    if os.path.exists(output_path):
+        raise OutputPathExists
+
     if source_directory is None:
         source_directory = tempfile.mkdtemp()
 
