@@ -24,7 +24,7 @@ packaged <output_path> <build_command> <startup_command> [<source_directory>]
 Such as:
 
 ```bash
-packaged my_project.bin 'pip install .' 'python -m your_package' path/to/project
+packaged my_project.sh 'pip install .' 'python -m your_package' path/to/project
 ```
 
 ## Examples
@@ -38,10 +38,10 @@ You can also find the pre-built binaries on the [Releases page](https://github.c
 ### Mandelbrot (`numpy`, `matplotlib`, GUI)
 
 ```bash
-packaged ./mandelbrot.bin 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
+packaged ./mandelbrot.sh 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
 ```
 
-This produces a `./mandelbrot.bin` binary with:
+This produces a `./mandelbrot.sh` binary with:
 
 - Python 3.12
 - `matplotlib`
@@ -65,7 +65,7 @@ is used for building the package. The equivalent command to build the project
 without `pyproject.toml` would be:
 
 ```bash
-packaged minesweeper.bin 'pip install .' 'python -m minesweeper' ./example/minesweeper
+packaged minesweeper.sh 'pip install .' 'python -m minesweeper' ./example/minesweeper
 ```
 
 ### Textual (TUI) Demo
@@ -75,7 +75,7 @@ skip the last argument. With this, no other files will be packaged other than
 what is produced in the build step.
 
 ```bash
-packaged ./textual.bin 'pip install textual' 'python -m textual'
+packaged ./textual.sh 'pip install textual' 'python -m textual'
 ```
 
 This will simply package the `textual` library's own demo into a single file.
