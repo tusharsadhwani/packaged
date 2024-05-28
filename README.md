@@ -18,13 +18,21 @@ pip install packaged
 ## Usage
 
 ```bash
-packaged <output_path> <build_command> <startup_command> [<source_directory>]
+packaged <output_path> <build_command> <startup_command> [<source_directory>] [--python-version=3.12]
 ```
 
 Such as:
 
 ```bash
 packaged my_project.sh 'pip install .' 'python -m your_package' path/to/project
+```
+
+This will package Python 3.12 with your application by default.
+
+To specify a different Python version, use the `--python-version` flag, like so:
+
+```bash
+packaged my_project.sh 'pip install .' 'python -m your_package' path/to/project --python-version=3.10
 ```
 
 ## Examples
@@ -38,12 +46,12 @@ You can also find the pre-built binaries on the [Releases page](https://github.c
 ### Mandelbrot (`numpy`, `matplotlib`, GUI)
 
 ```bash
-packaged ./mandelbrot.sh 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot
+packaged ./mandelbrot.sh 'pip install -r requirements.txt' 'python mandelbrot.py' ./example/mandelbrot --python-version=3.10
 ```
 
 This produces a `./mandelbrot.sh` binary with:
 
-- Python 3.12
+- Python 3.10
 - `matplotlib`
 - `numba`
 - `llvmlite`
