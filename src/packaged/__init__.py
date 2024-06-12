@@ -13,6 +13,8 @@ from unittest import mock
 import yen.github
 from yaspin import yaspin
 
+from pycify import replace_py_with_pyc
+
 if TYPE_CHECKING:
     from yaspin.core import Yaspin
 
@@ -48,6 +50,8 @@ def create_package(
     startup_command: str,
     python_version: str,
     quiet: bool = False,
+    pyc: bool = False,
+    ignore_file_patterns: list[str] | None = None,
 ) -> None:
     """Create the makeself executable, with the startup script in it."""
     if os.path.exists(output_path):
@@ -58,6 +62,17 @@ def create_package(
 
     if not os.path.isdir(source_directory):
         raise SourceDirectoryNotFound(source_directory)
+
+    if pyc:
+        created_pyc_files = replace_py_with_pyc(
+            source_directory,
+            python_version=python_version,
+            ignore_file_patterns=ignore_file_patterns,
+        )
+        if not created_pyc_files:
+            print("No .pyc files were created.", file=sys.stderr)
+        else:
+            print(f"Created {len(created_pyc_files)} .pyc files.")
 
     startup_script_name = "_packaged_startup.sh"
     startup_script_path = os.path.join(source_directory, startup_script_name)

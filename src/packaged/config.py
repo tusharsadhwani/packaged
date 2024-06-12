@@ -26,6 +26,8 @@ class Config:
     startup_command: str
     python_version: str
     quiet: bool
+    pyc: bool
+    ignore_file_patterns: list[str] | None
 
 
 CONFIG_NAME = "./packaged.toml"
