@@ -18,6 +18,7 @@ def build_package(
     output_path: str,
     build_command: str,
     startup_command: str,
+    create_pyc: bool,
 ) -> Iterator[None]:
     """Builds the package, but also delete it afterwards."""
     try:
@@ -27,6 +28,7 @@ def build_package(
             build_command,
             startup_command,
             python_version=packaged.DEFAULT_PYTHON_VERSION,
+            pyc=create_pyc,
         )
         yield
     finally:
@@ -50,14 +52,18 @@ def test_just_python() -> None:
 
 
 def test_numpy_pandas() -> None:
-    """Packages `numpy_pandas` to test packaging the math stack."""
+    """
+    Packages `numpy_pandas` to test packaging the math stack.
+    Also pass `--pyc` to ensure that works too.
+    """
     package_path = os.path.join(TEST_PACKAGES, "numpy_pandas")
     executable_path = "./numpy_pandas.bin"
     with build_package(
         package_path,
         executable_path,
         "pip install numpy pandas",
-        "python somefile.py",
+        "python somefile.pyc",
+        create_pyc=True,
     ):
         assert "0   -2.222222\ndtype: float64" in get_output(executable_path)
 
