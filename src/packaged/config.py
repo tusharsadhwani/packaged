@@ -26,6 +26,8 @@ class Config:
     startup_command: str
     python_version: str
     quiet: bool
+    pyc: bool
+    ignore_file_patterns: list[str] | None
 
 
 CONFIG_NAME = "./packaged.toml"
@@ -56,6 +58,8 @@ def parse_config(source_directory: str) -> Config:
             config_data["startup_command"],
             config_data.get("python_version", "3.12"),
             config_data.get("quiet", "CI" in os.environ),
+            config_data.get("pyc", False),
+            config_data.get("ignore_file_patterns"),
         )
     except KeyError as exc:
         key = exc.args[0]

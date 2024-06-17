@@ -74,6 +74,18 @@ def cli(argv: list[str] | None = None) -> int:
             action="store_true",
             default="CI" in os.environ,
         )
+        parser.add_argument(
+            "--pyc",
+            help="Replace .py files with .pyc files",
+            action="store_true",
+            default=False,
+        )
+        parser.add_argument(
+            "--ignore-file-patterns",
+            help="List of file patterns to ignore when using --pyc",
+            nargs="+",
+            default=["setup.py"],
+        )
         args = parser.parse_args(argv)
         config = Config(**vars(args))
 
@@ -85,6 +97,8 @@ def cli(argv: list[str] | None = None) -> int:
             config.startup_command,
             config.python_version,
             config.quiet,
+            config.pyc,
+            config.ignore_file_patterns,
         )
     except SourceDirectoryNotFound as exc:
         error(f"Folder {exc.directory_path!r} does not exist.")

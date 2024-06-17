@@ -22,6 +22,8 @@ def test_cli(monkeypatch: MonkeyPatch) -> None:
         "python -m foo",
         packaged.DEFAULT_PYTHON_VERSION,
         False,
+        False,
+        ["setup.py"],
     )
 
     with mock.patch.object(packaged.cli, "create_package") as mocked:
@@ -31,7 +33,14 @@ def test_cli(monkeypatch: MonkeyPatch) -> None:
 
     # specified python version
     mocked.assert_called_with(
-        None, "./baz", "pip install baz", "python -m baz", "3.10", False
+        None,
+        "./baz",
+        "pip install baz",
+        "python -m baz",
+        "3.10",
+        False,
+        False,
+        ["setup.py"],
     )
 
     with mock.patch.object(packaged.cli, "create_package") as mocked:
@@ -52,6 +61,8 @@ def test_cli(monkeypatch: MonkeyPatch) -> None:
         "python src/mypackage/cli.py",
         packaged.DEFAULT_PYTHON_VERSION,
         False,
+        False,
+        ["setup.py"],
     )
     args = mocked.call_args[0]
     assert args[0].endswith("/mypackage")
@@ -70,6 +81,8 @@ def test_cli(monkeypatch: MonkeyPatch) -> None:
         "python some.py",
         packaged.DEFAULT_PYTHON_VERSION,
         True,
+        False,
+        ["setup.py"],
     )
 
     # Test --quiet when CI is true, regardless of if the flag is passed
@@ -85,6 +98,8 @@ def test_cli(monkeypatch: MonkeyPatch) -> None:
         "python some.py",
         packaged.DEFAULT_PYTHON_VERSION,
         True,
+        False,
+        ["setup.py"],
     )
     monkeypatch.setattr(os, "environ", {"CI": "1"})
     with mock.patch.object(packaged.cli, "create_package") as mocked:
@@ -100,4 +115,51 @@ def test_cli(monkeypatch: MonkeyPatch) -> None:
         "python some.py",
         packaged.DEFAULT_PYTHON_VERSION,
         True,
+        False,
+        ["setup.py"],
+    )
+
+    # unset CI
+    monkeypatch.setattr(os, "environ", {})
+    with mock.patch.object(packaged.cli, "create_package") as mocked:
+        packaged.cli.cli(
+            ["./some", "pip install some", "python some.py", "./some.bin", "--pyc"]
+        )
+
+    # pyc is True
+    mocked.assert_called_with(
+        mock.ANY,
+        "./some",
+        "pip install some",
+        "python some.py",
+        packaged.DEFAULT_PYTHON_VERSION,
+        False,
+        True,
+        ["setup.py"],
+    )
+
+    with mock.patch.object(packaged.cli, "create_package") as mocked:
+        packaged.cli.cli(
+            [
+                "./some",
+                "pip install some",
+                "python some.py",
+                "./some.bin",
+                "--pyc",
+                "--ignore-file-patterns",
+                "foo.py",
+                "test/*.py",
+            ]
+        )
+
+    # pyc is True and ignore_file_patterns is ['foo.py', 'test/*.py']
+    mocked.assert_called_with(
+        mock.ANY,
+        "./some",
+        "pip install some",
+        "python some.py",
+        packaged.DEFAULT_PYTHON_VERSION,
+        False,
+        True,
+        ["foo.py", "test/*.py"],
     )

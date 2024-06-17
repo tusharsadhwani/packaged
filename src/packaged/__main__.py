@@ -1,4 +1,5 @@
 """Support executing the CLI by doing `python -m packaged`."""
+
 from __future__ import annotations
 
 from packaged.cli import cli
