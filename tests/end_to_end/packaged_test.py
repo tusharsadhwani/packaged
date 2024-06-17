@@ -18,7 +18,8 @@ def build_package(
     output_path: str,
     build_command: str,
     startup_command: str,
-    create_pyc: bool,
+    *,
+    create_pyc: bool = False,
 ) -> Iterator[None]:
     """Builds the package, but also delete it afterwards."""
     try:
