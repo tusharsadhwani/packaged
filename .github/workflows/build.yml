@@ -61,11 +61,11 @@ jobs:
           packaged ./aliens.sh 'pip install pygame' 'python -m pygame.examples.aliens'
           tar czf $ALIENS_NAME ./aliens.sh
 
-          # textual: requires no source
-          TEXTUAL_NAME="textual-${{ matrix.target }}.tar.gz"
-          TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
-          packaged ./textual.sh 'pip install textual' 'python -m textual'
-          tar czf $TEXTUAL_NAME ./textual.sh
+          # posting: requires no source
+          POSTING_NAME="posting-${{ matrix.target }}.tar.gz"
+          POSTING_PATH=${PWD}/${POSTING_NAME}
+          packaged ./posting.sh 'pip install posting' 'posting'
+          tar czf $POSTING_NAME ./posting.sh
 
           # IPython: requires no source
           IPYTHON_NAME="ipython-${{ matrix.target }}.tar.gz"
@@ -88,8 +88,8 @@ jobs:
           # Setup output paths for upload
           echo "ALIENS_NAME=${ALIENS_NAME}" >> $GITHUB_OUTPUT
           echo "ALIENS_PATH=${ALIENS_PATH}" >> $GITHUB_OUTPUT
-          echo "TEXTUAL_NAME=${TEXTUAL_NAME}" >> $GITHUB_OUTPUT
-          echo "TEXTUAL_PATH=${TEXTUAL_PATH}" >> $GITHUB_OUTPUT
+          echo "POSTING_NAME=${POSTING_NAME}" >> $GITHUB_OUTPUT
+          echo "POSTING_PATH=${POSTING_PATH}" >> $GITHUB_OUTPUT
           echo "IPYTHON_NAME=${IPYTHON_NAME}" >> $GITHUB_OUTPUT
           echo "IPYTHON_PATH=${IPYTHON_PATH}" >> $GITHUB_OUTPUT
           echo "MANDELBROT_NAME=${MANDELBROT_NAME}" >> $GITHUB_OUTPUT
@@ -103,11 +103,11 @@ jobs:
           name: ${{ steps.build.outputs.ALIENS_NAME }}
           path: ${{ steps.build.outputs.ALIENS_PATH }}
 
-      - name: Upload textual
+      - name: Upload posting
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build.outputs.TEXTUAL_NAME }}
-          path: ${{ steps.build.outputs.TEXTUAL_PATH }}
+          name: ${{ steps.build.outputs.POSTING_NAME }}
+          path: ${{ steps.build.outputs.POSTING_PATH }}
 
       - name: Upload IPython
         uses: actions/upload-artifact@v4
@@ -134,7 +134,7 @@ jobs:
           draft: true
           files: |
             ${{ steps.build.outputs.ALIENS_PATH }}
-            ${{ steps.build.outputs.TEXTUAL_PATH }}
+            ${{ steps.build.outputs.POSTING_PATH }}
             ${{ steps.build.outputs.IPYTHON_PATH }}
             ${{ steps.build.outputs.MANDELBROT_PATH }}
             ${{ steps.build.outputs.MINESWEEPER_PATH }}

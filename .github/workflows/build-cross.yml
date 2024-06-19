@@ -56,11 +56,11 @@ jobs:
             packaged ./aliens.sh 'pip install pygame' 'python -m pygame.examples.aliens'
             tar czf $ALIENS_NAME ./aliens.sh
 
-            # textual: requires no source
-            TEXTUAL_NAME="textual-${{ matrix.target }}.tar.gz"
-            TEXTUAL_PATH=${PWD}/${TEXTUAL_NAME}
-            packaged ./textual.sh 'pip install textual' 'python -m textual'
-            tar czf $TEXTUAL_NAME ./textual.sh
+            # posting: requires no source
+            POSTING_NAME="posting-${{ matrix.target }}.tar.gz"
+            POSTING_PATH=${PWD}/${POSTING_NAME}
+            packaged ./posting.sh 'pip install posting' 'posting'
+            tar czf $POSTING_NAME ./posting.sh
 
             # IPython: requires no source
             IPYTHON_NAME="ipython-${{ matrix.target }}.tar.gz"
@@ -84,8 +84,8 @@ jobs:
             echo Setting paths in output
             echo ::set-output name=ALIENS_NAME::"${ALIENS_NAME}"
             echo ::set-output name=ALIENS_PATH::"${ALIENS_PATH}"
-            echo ::set-output name=TEXTUAL_NAME::"${TEXTUAL_NAME}"
-            echo ::set-output name=TEXTUAL_PATH::"${TEXTUAL_PATH}"
+            echo ::set-output name=POSTING_NAME::"${POSTING_NAME}"
+            echo ::set-output name=POSTING_PATH::"${POSTING_PATH}"
             echo ::set-output name=IPYTHON_NAME::"${IPYTHON_NAME}"
             echo ::set-output name=IPYTHON_PATH::"${IPYTHON_PATH}"
             echo ::set-output name=MANDELBROT_NAME::"${MANDELBROT_NAME}"
@@ -99,11 +99,11 @@ jobs:
           name: ${{ steps.build.outputs.ALIENS_NAME }}
           path: ${{ steps.build.outputs.ALIENS_PATH }}
 
-      - name: Upload textual
+      - name: Upload posting
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build.outputs.TEXTUAL_NAME }}
-          path: ${{ steps.build.outputs.TEXTUAL_PATH }}
+          name: ${{ steps.build.outputs.POSTING_NAME }}
+          path: ${{ steps.build.outputs.POSTING_PATH }}
 
       - name: Upload IPython
         uses: actions/upload-artifact@v4
@@ -130,7 +130,7 @@ jobs:
           draft: true
           files: |
             ${{ steps.build.outputs.ALIENS_PATH }}
-            ${{ steps.build.outputs.TEXTUAL_PATH }}
+            ${{ steps.build.outputs.POSTING_PATH }}
             ${{ steps.build.outputs.IPYTHON_PATH }}
             ${{ steps.build.outputs.MANDELBROT_PATH }}
             ${{ steps.build.outputs.MINESWEEPER_PATH }}

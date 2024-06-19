@@ -76,17 +76,20 @@ without `pyproject.toml` would be:
 packaged minesweeper.sh 'pip install .' 'python -m minesweeper' ./example/minesweeper
 ```
 
-### Textual (TUI) Demo
+### Posting (TUI based API testing app)
+
+Posting is a Postman alternative that runs entirely in the terminal. A perfect
+candidate to build an executable out of!
 
 Since the dependencies themselves contain all the source code needed, you can
 skip the last argument. With this, no other files will be packaged other than
 what is produced in the build step.
 
 ```bash
-packaged ./textual.sh 'pip install textual' 'python -m textual'
+packaged ./posting.sh 'pip install posting' 'posting'
 ```
 
-This will simply package the `textual` library's own demo into a single file.
+This will simply package the `posting` app into a single file.
 
 ### Aliens (pygame)
 
