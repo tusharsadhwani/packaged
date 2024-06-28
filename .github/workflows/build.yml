@@ -64,7 +64,7 @@ jobs:
           # posting: requires no source
           POSTING_NAME="posting-${{ matrix.target }}.tar.gz"
           POSTING_PATH=${PWD}/${POSTING_NAME}
-          packaged ./posting.sh 'pip install posting' 'posting'
+          packaged ./posting.sh 'AR=/usr/bin/ar pip install posting' 'posting'
           tar czf $POSTING_NAME ./posting.sh
 
           # IPython: requires no source
